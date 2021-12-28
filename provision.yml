@@ -1,10 +1,14 @@
 # ansible-playbook ./setup.yml  -v -vvvv -u ubuntu -i ./host.yml 
-# cd /vagrant && ansible-playbook /vagrant/provision.yml  -vvv -i /vagrant/inventory.txt  -l nodes
+# cd /vagrant && ansible-playbook /vagrant/provision.yml  -vvv -i /vagrant/inventory.txt  -l all
 ---
 - name: Playbook de création de cluster
   hosts: [all]
   become: yes
   user: vagrant
+
+  environment:
+
+    SERVER_NTP: 0.fr.pool.ntp.org
 
   tasks:
  
@@ -24,15 +28,16 @@
     apt: name={{ item }} state=present update_cache=yes
     with_items:
       - rng-tools
+      - ntpdate
       - vim
       - lsof
       - lynx
       - nmap
       - dnsutils
       - dos2unix
-      - sshpass   
+      - sshpass
   - name: Mise à jour du l'heure
-    shell: ntpdate -su $IPA_SERVER_NTP
+    shell: ntpdate -su $SERVER_NTP
     register: result
   - name: Affichage de l'heure
     debug:
