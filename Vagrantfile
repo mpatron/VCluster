@@ -67,7 +67,9 @@ Vagrant.configure("2") do |config|
 
     machine.vm.network "private_network", ip: "192.168.56.140"
     # Workaround, sous windows /vagrant/ansible.cfg est r/w et il faut que ansible.cfg soit ro
-    machine.vm.provision "shell", inline: "sudo mkdir -p /etc/ansible && sudo cat /vagrant/ansible.cfg > /etc/ansible/ansible.cfg && sudo apt update && sudo apt install sshpass", run: "always"
+    machine.vm.provision "shell", inline: "sudo mkdir -p /etc/ansible && sudo cat /vagrant/ansible.cfg > /etc/ansible/ansible.cfg", run: "always"
+    machine.vm.provision "shell", inline: "sudo sh -c 'cat /vagrant/inventory.txt > /etc/ansible/hosts'", run: "always"
+    machine.vm.provision "shell", inline: "sudo apt update && sudo apt install sshpass", run: "always"
     machine.vm.provision :ansible_local do |ansible|
       ansible.playbook       = "provision.yml"
       ansible.verbose        = true
@@ -76,5 +78,6 @@ Vagrant.configure("2") do |config|
       ansible.limit          = "all" # or only "nodes" group, etc.
       ansible.inventory_path = "inventory.txt"
     end
+
   end
  end
