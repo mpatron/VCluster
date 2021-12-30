@@ -7,7 +7,16 @@ docker_install_compose: False
 
 kubernetes_version: '1.20'
 kubernetes_allow_pods_on_master: False
-kubernetes_pod_network_cidr: '10.244.0.0/16'
+# kubernetes_pod_network_cidr: '10.244.0.0/16'
+kubernetes_pod_network:
+  # Flannel CNI.
+  # cni: 'flannel'
+  # cidr: '10.244.0.0/16'
+  #
+  # Calico CNI.
+  cni: 'calico'
+  cidr: '192.168.0.0/16'
+
 kubernetes_packages:
   - name: kubelet=1.20.13-00
     state: present
