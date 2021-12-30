@@ -19,6 +19,11 @@
         name: net.ipv4.ip_forward
         value: '1'
         sysctl_set: yes
+    - name: "vm.swappiness=0 pas d'utilisation de disque"
+      ansible.posix.sysctl:
+        name: vm.swappiness
+        value: '0'
+        state: present        
 
   roles:
     - role: geerlingguy.swap
