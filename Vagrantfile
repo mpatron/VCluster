@@ -33,18 +33,20 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.box = IMAGE
+  config.vm.box_check_update = false
+  config.vm.provider :virtualbox do |vb|
+    vb.cpus = VM_CPU
+    vb.memory = VM_RAM
+    vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
+    vb.linked_clone = true
+  end
+  config.vm.boot_timeout = 120
+  config.ssh.insert_key = false
+
   (1..VM_COUNT).each do |i|
     config.vm.define "node#{i}" do |node|
       node.vm.hostname = "node#{i}.jobjects.net"
-
-      node.vm.box = IMAGE
-      node.vm.boot_timeout = 60
-      node.vm.provider "virtualbox" do |vb|
-        vb.cpus = VM_CPU    
-        vb.memory = VM_RAM
-        vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
-      end
-
       node.vm.network "private_network", ip: "192.168.56.14#{i}"
       node.vm.provision "shell", run: "always", inline: <<-SHELL1
         sudo apt update && sudo apt install sshpass
@@ -56,15 +58,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.define 'node0' do |machine|
     machine.vm.hostname = "node0.jobjects.net"
-
-    machine.vm.box = IMAGE
-    machine.vm.boot_timeout = 60
-    machine.vm.provider "virtualbox" do |vb|
-      vb.cpus = VM_CPU    
-      vb.memory = VM_RAM
-      vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
-    end
-
     machine.vm.network "private_network", ip: "192.168.56.140"
     # Workaround, sous windows /vagrant/ansible.cfg est r/w et il faut que ansible.cfg soit ro
     machine.vm.provision "shell", inline: "sudo mkdir -p /etc/ansible && sudo cat /vagrant/ansible.cfg > /etc/ansible/ansible.cfg", run: "always"
