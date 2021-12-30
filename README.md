@@ -23,7 +23,9 @@ Exécuter une commande sur tous les noeux à partir du node0
 ansible all -m raw -a "df -kh"
 ~~~
 
-https://buildvirtual.net/deploy-a-kubernetes-cluster-using-ansible/
-https://github.com/geerlingguy/ansible-role-kubernetes
-https://github.com/geerlingguy/ansible-role-glusterfs
-https://github.com/geerlingguy/ansible-for-devops/tree/master/kubernetes
+## Sources
+
+- [kubernetes-cluster-using-ansible](https://buildvirtual.net/deploy-a-kubernetes-cluster-using-ansible/)
+- [ansible-role-kubernetes](https://github.com/geerlingguy/ansible-role-kubernetes)
+- [ansible-role-glusterfs](https://github.com/geerlingguy/ansible-role-glusterfs)
+- [ansible-for-devops](https://github.com/geerlingguy/ansible-for-devops/tree/master/kubernetes)
