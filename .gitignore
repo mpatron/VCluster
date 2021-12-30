@@ -17,3 +17,7 @@ target
 derby.log
 
 .vagrant
+
+# A ignorer, faire : ansible-galaxy install -r requirements.yml -p ./roles
+# et être à jour
+exemples/kubernetes/roles
