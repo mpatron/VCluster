@@ -1,7 +1,10 @@
 # install
 
 ~~~bash
+mkdir -p ~/.kube && sudo sh -c "cat /root/.kube/config > /home/vagrant/.kube/config" && sudo chown $USER:$USER ~/.kube/config
+
 ansible-galaxy install -r requirements.yml -p ./roles
+ansible-playbook -i ./inventory main.yml
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
 ~~~
