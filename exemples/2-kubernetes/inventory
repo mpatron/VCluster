@@ -11,16 +11,5 @@ k8s-nodes
 
 [k8s:vars]
 ansible_user=vagrant
-# ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
-# ansible_ssh_private_key_file=/mnt/c/Users/mickael/.vagrant.d/insecure_private_key
 ansible_ssh_pass=vagrant
 
-[gluster]
-node0 ansible_host=192.168.56.140
-node1 ansible_host=192.168.56.141
-node2 ansible_host=192.168.56.142
-node3 ansible_host=192.168.56.143
-
-[gluster:vars]
-ansible_ssh_user=vagrant
-ansible_ssh_pass=vagrant
