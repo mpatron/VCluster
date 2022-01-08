@@ -20,3 +20,8 @@ kubernetes_packages:
 
 kubernetes_apiserver_advertise_address: "192.168.56.140"
 kubernetes_kubelet_extra_args: '--node-ip={{ ansible_host }}'
+
+# Gluster configuration.
+gluster_mount_dir: /mnt/gluster
+gluster_brick_dir: /srv/gluster/brick
+gluster_brick_name: kubegfs
