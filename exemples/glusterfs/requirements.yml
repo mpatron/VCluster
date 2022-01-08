@@ -1,0 +1,9 @@
+---
+roles:
+  - name: geerlingguy.swap
+  - name: geerlingguy.containerd
+  - name: geerlingguy.kubernetes
+  - name: geerlingguy.glusterfs
+
+collections:
+  - name: community.kubernetes
