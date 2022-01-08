@@ -20,4 +20,5 @@ derby.log
 
 # A ignorer, faire : ansible-galaxy install -r requirements.yml -p ./roles
 # et être à jour
-exemples/kubernetes/roles
+exemples/1-glusterfs/roles
+exemples/2-kubernetes/roles
