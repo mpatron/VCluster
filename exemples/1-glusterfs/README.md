@@ -13,3 +13,10 @@ vagrant ssh -c "sudo gluster volume info" node0
 sudo gluster volume stop <volume name>
 sudo gluster volume delete <volume name>
 ~~~
+
+## Test avec kubernetes
+
+~~~bash
+kubectl exec -it glusterfs -- bash
+mount | grep gluster
+~~~
