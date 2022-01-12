@@ -10,6 +10,15 @@ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manif
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
 ~~~
 
+## Challenge de migration
+
+Traefik 1.7.26 (28/07/20)->v1.7.34 (10/12/21)
+
+- [https://github.com/traefik/traefik/blob/v1.7/examples/k8s/traefik-deployment.yaml]
+- [https://doc.traefik.io/traefik/migration/v1-to-v2/]
+
+Kubernetes 1.18.8 ()-> 1.18.20-00
+
 ## Configuration de mettallb
 
 ~~~bash
