@@ -1,19 +1,20 @@
 ---
 swap_file_state: absent
 
-kubernetes_version: '1.18'
+kubernetes_version: '1.23'
 kubernetes_allow_pods_on_master: False
 kubernetes_pod_network:
   # Calico CNI.
   cni: 'calico'
   cidr: '192.168.0.0/16'
+kubernetes_calico_manifest_file: https://docs.projectcalico.org/manifests/calico.yaml # Pour kubenetes 1.23
 
 kubernetes_packages:
-  - name: kubelet=1.18.8-00
+  - name: kubelet=1.23.1-00
     state: present
-  - name: kubectl=1.18.8-00
+  - name: kubectl=1.23.1-00
     state: present
-  - name: kubeadm=1.18.8-00
+  - name: kubeadm=1.23.1-00
     state: present
   - name: kubernetes-cni
     state: present

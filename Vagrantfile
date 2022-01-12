@@ -41,8 +41,8 @@ Vagrant.configure("2") do |config|
     vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
     vb.linked_clone = true
   end
-  config.vm.boot_timeout = 120
-  config.ssh.insert_key = false
+  config.vm.boot_timeout = 300 # default=300s
+  # config.ssh.insert_key = false
 
   (1..VM_COUNT).each do |i|
     config.vm.define "node#{i}" do |node|
