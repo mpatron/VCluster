@@ -3,6 +3,7 @@
 ## Prosionning
 
 ~~~powershell
+vagrant plugin update 
 vagrant up --provision --provider virtualbox
 vagrant destroy -f
 vagrant global-status
