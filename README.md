@@ -29,5 +29,5 @@ ansible gluster -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
 
 See documentation:
 
-- [Installation de GlusterFS](exemples/1-glusterfs/README.md)
-- [Installation de Kubernetes](exemples/2-kubernetes/README.md)
+- [Installation de GlusterFS](exemples/3-gluster-volume/README.md)
+- [Installation de Kubernetes](exemples/2-cluster-kubernetes/README.md)
