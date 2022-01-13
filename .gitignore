@@ -22,3 +22,5 @@ derby.log
 # et être à jour
 exemples/1-glusterfs/roles
 exemples/2-kubernetes/roles
+
+.vscode
