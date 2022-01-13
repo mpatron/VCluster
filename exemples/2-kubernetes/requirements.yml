@@ -4,6 +4,7 @@ roles:
   - name: geerlingguy.containerd
   - name: geerlingguy.kubernetes
   - name: geerlingguy.glusterfs
+  - name: geerlingguy.helm
 
 collections:
   - name: community.kubernetes

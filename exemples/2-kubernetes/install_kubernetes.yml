@@ -30,3 +30,6 @@
 
     - role: geerlingguy.kubernetes
       tags: ['kubernetes']
+
+    - role: geerlingguy.helm
+      tags: ['kubernetes']

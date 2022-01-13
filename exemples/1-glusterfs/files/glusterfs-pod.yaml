@@ -6,6 +6,9 @@ spec:
   containers:
   - name: glusterfs
     image: nginx
+#    securityContext:
+#      runAsUser: 1000
+#      allowPrivilegeEscalation: false    
     volumeMounts:
     - mountPath: "/mnt/glusterfs"
       name: glusterfsvol

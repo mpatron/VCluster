@@ -1,0 +1,10 @@
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm show values bitnami/keycloak
+helm install keycloak bitnami/keycloak
+
+export SERVICE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].port}" services keycloak)
+export SERVICE_IP=$(kubectl get svc --namespace default keycloak -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo "http://${SERVICE_IP}:${SERVICE_PORT}/auth"
+
+echo Username: user
+echo Password: $(kubectl get secret --namespace default keycloak -o jsonpath="{.data.admin-password}" | base64 --decode)
