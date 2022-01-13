@@ -5,7 +5,7 @@ for i in {0..4}; do ssh-keygen -f ~/.ssh/known_hosts -R "192.168.56.14${i}"; don
 
 ansible-galaxy install -r requirements.yml -p ./roles
 ansible all -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
-ansible-playbook -i ./inventory install_kubernetes.yml
+ansible-playbook -i ./inventory playbook_install.yml
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
 
