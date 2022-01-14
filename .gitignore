@@ -24,3 +24,4 @@ exemples/1-cluster-gluster/roles
 exemples/2-cluster-kubernetes/roles
 
 .vscode
+.kube
