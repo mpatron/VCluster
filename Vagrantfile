@@ -11,6 +11,7 @@ VM_COUNT = 4
 VM_RAM = "3072" # 1024 2048 3072 4096 8192
 VM_CPU = 2
 IMAGE = "ubuntu/focal64" #20.04 LTS
+# IMAGE = "generic/ubuntu2004"
 
 Vagrant.configure("2") do |config|
   
@@ -35,6 +36,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = IMAGE
   config.vm.box_check_update = false
+  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
   config.vm.provider :virtualbox do |vb|
     vb.cpus = VM_CPU
     vb.memory = VM_RAM
