@@ -1,0 +1,11 @@
+---
+- name: Ensure dependencies are installed.
+  yum:
+    name: "centos-release-nfs-ganesha30{{ nfs-ganesha_default_release }}"
+    state: present
+
+- name: Ensure Gluster packages are installed.
+  yum:
+    name:
+      - nfs-ganesha-gluster
+    state: present

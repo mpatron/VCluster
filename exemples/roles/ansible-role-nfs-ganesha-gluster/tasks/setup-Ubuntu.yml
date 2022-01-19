@@ -1,0 +1,28 @@
+---
+- name: Ensure dependencies are installed.
+  apt:
+    name: dirmngr
+    state: present
+
+- name: Ensure PPA for NFS-Ganesha is present.
+  apt_repository:
+    repo: 'ppa:nfs-ganesha/nfs-ganesha-{{ nfs-ganesha_ppa_version }}'
+    state: present
+    update_cache: true
+  register: nfs-ganesha_ppa_added
+  when: nfs-ganesha_ppa_use
+
+- name: Ensure NFS-Ganesha will reinstall if the PPA was just added.
+  apt:
+    name:
+      - nfs-ganesha-gluster
+    state: absent
+  when: nfs-ganesha_ppa_added.changed
+  tags: ['skip_ansible_lint']
+
+- name: Ensure NFS-Ganesha is installed.
+  apt:
+    name:
+      - nfs-ganesha-gluster
+    state: present
+    default_release: "{{ nfs-ganesha_default_release }}"

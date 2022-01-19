@@ -1,0 +1,17 @@
+---
+- name: Override nfs-ganesha_daemon for Ubuntu 14.04.
+  set_fact:
+    nfs-ganesha_daemon: nfs-ganesha-server
+  when:
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_version == "14.04"
+
+# Setup/install tasks.
+- include: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: setup-{{ ansible_distribution }}.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure NFS-Ganesha is started and enabled at boot.
+  service: "name={{ nfs-ganesha_daemon }} state=started enabled=yes"

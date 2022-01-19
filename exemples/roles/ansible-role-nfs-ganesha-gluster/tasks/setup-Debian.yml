@@ -1,0 +1,43 @@
+---
+- name: Ensure dependencies are installed.
+  apt:
+    name:
+      - gnupg2
+      - apt-transport-https
+      - ca-certificates
+    state: present
+
+- name: Ensure repository pubkey for NFS-Ganesha is present.
+  apt_key:
+    url: 'https://download.gluster.org/pub/gluster/nfs-ganesha/{{ nfs-ganesha_gpg_key_version }}/rsa.pub'
+    state: present
+  register: nfs-ganesha_pub_key_added
+
+- name: Get the DEB architecture.
+  command: dpkg --print-architecture
+  changed_when: false
+  register: deb_architecture
+
+- name: Ensure debian repo is present.
+  apt_repository:
+    repo: "deb https://download.gluster.org/pub/gluster/nfs-ganesha/{{ nfs-ganesha_deb_version }}/Debian/\
+      {{ ansible_distribution_release }}/{{ deb_architecture.stdout }}/apt {{ ansible_distribution_release }} \
+      main"
+    state: present
+    filename: gluster
+  register: nfs-ganesha_deb_source_added
+
+- name: Ensure NFS-Ganesha will reinstall if the DEB source was just added.
+  apt:
+    name:
+      - nfs-ganesha-gluster 
+    state: absent
+  when: nfs-ganesha_deb_source_added.changed
+  tags: ['skip_ansible_lint']
+
+- name: Ensure NFS-Ganesha is installed.
+  apt:
+    name:
+      - nfs-ganesha-gluster 
+    state: present
+    default_release: "{{ nfs-ganesha_default_release }}"
