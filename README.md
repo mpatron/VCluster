@@ -31,4 +31,4 @@ See documentation:
 
 - [Installation de GlusterFS](exemples/1-cluster-glusterfs/README.md)
 - [Installation de Kubernetes](exemples/2-cluster-kubernetes/README.md)
-- [Installation des volumes GlusterFS dans kubernetes](exemples/3-gluster-volume/README.md)
+- [Installation des volumes GlusterFS et NFS dans kubernetes](exemples/3-gluster-volume/README.md)

@@ -1,0 +1,51 @@
+---
+- hosts: node0
+  become: yes
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+
+    - name: Ensure PIP3 is installed.
+      apt:
+        name:
+          - python3-pip
+        state: present
+
+    - name: Install kubernetes python package on version 21.7.0
+      pip:
+        name: kubernetes
+
+    - name: Add metallb chart repo
+      kubernetes.core.helm_repository:
+        name: metallb
+        repo_url: "https://metallb.github.io/metallb"
+      when: ansible_hostname == 'node0'
+
+    - name: Create a k8s namespace
+      kubernetes.core.k8s:
+        name: metallb-system
+        api_version: v1
+        kind: Namespace
+        state: present
+      when: ansible_hostname == 'node0'
+
+    - name: Copy a new "metallb_values.yml" file into place, backing up the original if it differs from the copied version
+      ansible.builtin.copy:
+        src: files/metallb_values.yml
+        dest: /tmp/metallb_values.yml
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+      when: ansible_hostname == 'node0'
+
+    - name: Deploy latest version of metallb chart inside metallb-system namespace with values
+      kubernetes.core.helm:
+        name: metallb
+        chart_ref: metallb/metallb
+        release_namespace: metallb-system
+        values_files:
+          - /tmp/metallb_values.yml
+      when: ansible_hostname == 'node0'

@@ -3,7 +3,7 @@
 ~~~bash
 for i in {0..4}; do ssh-keygen -f ~/.ssh/known_hosts -R "192.168.56.14${i}"; done
 
-ansible-galaxy install -r requirements.yml -p ./roles
+ansible-galaxy install -r requirements.yml --force
 ansible all -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
 ansible-playbook -i ./inventory playbook_install.yml
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
@@ -182,6 +182,15 @@ KVERSION=1.21.8-00
 sudo apt-mark unhold kubeadm kubelet kubectl && sudo apt-get update && sudo apt-get install -y kubeadm=${KVERSION} kubelet=${KVERSION} kubectl=${KVERSION} && sudo apt-mark hold kubeadm kubelet kubectl
 sudo kubeadm upgrade node
 sudo systemctl restart kubelet
+~~~
+
+## Components
+
+Prérequis, il faut que le lanceur de ansible ait pip3 et le module pip kubernetes
+
+~~~bash
+sudo apt install python3-pip
+pip3 install kubernetes
 ~~~
 
 ## Sources

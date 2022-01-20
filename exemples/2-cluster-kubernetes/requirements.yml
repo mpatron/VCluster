@@ -7,4 +7,6 @@ roles:
   - name: geerlingguy.helm
 
 collections:
-  - name: community.kubernetes
+  - name: kubernetes.core
+    version: 2.2.3
+    source: https://galaxy.ansible.com

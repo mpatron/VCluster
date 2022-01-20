@@ -10,11 +10,11 @@ kubernetes_pod_network:
 kubernetes_calico_manifest_file: https://docs.projectcalico.org/manifests/calico.yaml # Pour kubenetes 1.23
 
 kubernetes_packages:
-  - name: kubelet=1.23.1-00
+  - name: kubelet=1.23.2-00
     state: present
-  - name: kubectl=1.23.1-00
+  - name: kubectl=1.23.2-00
     state: present
-  - name: kubeadm=1.23.1-00
+  - name: kubeadm=1.23.2-00
     state: present
   - name: kubernetes-cni
     state: present
