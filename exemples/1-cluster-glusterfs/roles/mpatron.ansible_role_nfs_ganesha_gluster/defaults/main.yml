@@ -11,4 +11,4 @@ nfs_ganesha_gpg_key_version: "3"
 nfs_ganesha_deb_version: "LATEST"
 
 nfs_ganesha_volume_name: "kubegfs"
-nfs_ganesha_hostname: "192.168.56.140"
+

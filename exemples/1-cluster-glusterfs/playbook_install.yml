@@ -10,6 +10,7 @@
     - mpatron.ansible_role_nfs_ganesha_gluster
 
   tasks:
+
     - name: Ensure Gluster brick and mount directories exist.
       file: "path={{ item }} state=directory mode=0775"
       with_items:
@@ -34,3 +35,7 @@
         fstype: glusterfs
         opts: "defaults,_netdev"
         state: mounted
+
+    - name: Show host's ip
+      debug:
+        msg: "{{ ansible_ssh_host }}  {{ hostvars[inventory_hostname].ansible_host }}"

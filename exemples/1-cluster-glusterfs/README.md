@@ -21,19 +21,11 @@ vagrant ssh -c "sudo gluster volume info" node0
 ~~~
 
 ~~~bash
-
 sudo gluster volume get kubegfs nfs.disable
 # On doit voir "on"
-sudo apt -y install nfs-ganesha-gluster
-sudo systemctl daemon-reload
-sudo mv /etc/ganesha/ganesha.conf /etc/ganesha/ganesha.conf.init
 
-## Ateention avec PPA
-sudo add-apt-repository ppa:nfs-ganesha/libntirpc-3.0
-sudo apt-get update
-
-# create new
-cat << EOF >/etc/ganesha/ganesha.conf
+# Contenu de la configuration
+cat /etc/ganesha/ganesha.conf
 NFS_CORE_PARAM {
     # possible to mount with NFSv3 to NFSv4 Pseudo path
     mount_path_pseudo = true;
@@ -70,16 +62,14 @@ LOG {
     # default log level DEBUG WARN
     Default_Log_Level = DEBUG;
 }
-EOF
-
-sudo systemctl restart nfs-ganesha
-sudo systemctl enable nfs-ganesha
-sudo systemctl status nfs-ganesha
 ~~~
 
 ## Verification
 
 ~~~bash
+# Par default le volume est créé avec nfs.disable on, il faut qu'il soit à on.
+vagrant@node0:~$ sudo gluster volume get kubegfs nfs.disable
+# On doit voir "on"
 vagrant@node0:~$ mountstats
 # No NFS mount points were found
 vagrant@node0:~$ showmount -e localhost
@@ -88,9 +78,13 @@ sudo systemctl stop nfs-ganesha.service && sudo systemctl start nfs-ganesha.serv
 sudo systemctl status nfs-ganesha.service
 sudo vi /etc/ganesha/ganesha.conf
 grep -v '^\s*$\|^\s*\#' /etc/ganesha/ganesha.conf
+# En cette période de debut de janvier 2022, ganesha plante, un phase de debug a du être faite.
 rm -rf ~/toto && mkdir ~/toto && sudo apport-unpack  /var/crash/_usr_bin_ganesha.nfsd.0.crash ~/toto
 gdb /usr/bin/ganesha.nfsd ~/toto/CoreDump
 backtrace
 q
-
 ~~~
+
+## Sources
+
+Des roles de geerlingguy sont utilisés. Et un roles pour installer nfs_ganesha_gluster a été construit, je n'ai su trouver un role déjà fabriquer pour faire cela. Le code se trouve sur [https://github.com/mpatron/ansible-role-nfs-ganesha-gluster] et sur [https://galaxy.ansible.com/mpatron/ansible_role_nfs_ganesha_gluster].
