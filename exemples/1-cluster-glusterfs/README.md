@@ -28,6 +28,10 @@ sudo apt -y install nfs-ganesha-gluster
 sudo systemctl daemon-reload
 sudo mv /etc/ganesha/ganesha.conf /etc/ganesha/ganesha.conf.init
 
+## Ateention avec PPA
+sudo add-apt-repository ppa:nfs-ganesha/libntirpc-3.0
+sudo apt-get update
+
 # create new
 cat << EOF >/etc/ganesha/ganesha.conf
 NFS_CORE_PARAM {

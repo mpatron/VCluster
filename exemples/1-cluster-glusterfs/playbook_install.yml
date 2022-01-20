@@ -7,6 +7,7 @@
 
   roles:
     - geerlingguy.glusterfs
+    - mpatron.ansible_role_nfs_ganesha_gluster
 
   tasks:
     - name: Ensure Gluster brick and mount directories exist.

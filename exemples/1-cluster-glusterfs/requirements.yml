@@ -4,6 +4,7 @@ roles:
   - name: geerlingguy.containerd
   - name: geerlingguy.kubernetes
   - name: geerlingguy.glusterfs
+  - name: mpatron.ansible_role_nfs_ganesha_gluster
 
 collections:
   - name: community.kubernetes

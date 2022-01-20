@@ -1,0 +1,6 @@
+---
+- name: reload nfs-ganesha
+  service:
+    name: "nfs-ganesha"
+    state: restarted
+    enabled: true

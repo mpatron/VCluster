@@ -1,0 +1,14 @@
+---
+nfs_ganesha_daemon: nfs-ganesha
+
+# For Ubuntu.
+nfs_ganesha_default_release: ""
+nfs_ganesha_ppa_use: true
+nfs_ganesha_ppa_version: "3.0" # "3.0" or "4.0"
+
+# For Debian.
+nfs_ganesha_gpg_key_version: "3"
+nfs_ganesha_deb_version: "LATEST"
+
+nfs_ganesha_volume_name: "kubegfs"
+nfs_ganesha_hostname: "192.168.56.140"

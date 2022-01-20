@@ -1,0 +1,35 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: mpatron
+  description: NFS Ganesha installation and configuration.
+  company: no company (optional)
+  license: "license MIT"
+  min_ansible_version: 2.1
+  platforms:
+    - name: EL
+      versions:
+        - 6
+        - 7
+    - name: Ubuntu
+      versions:
+        - trusty
+        - xenial
+        - bionic
+    - name: Debian
+      versions:
+        - wheezy
+        - jessie
+        - stretch
+
+  galaxy_tags:
+    - system
+    - networking
+    - cloud
+    - clustering
+    - files
+    - sharing
+    - gluster
+    - nfs
+    - ganesha

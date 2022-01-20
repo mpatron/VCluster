@@ -12,21 +12,21 @@ EXPORT {
     # uniq ID
     Export_Id = 101;
     # mount path of Gluster Volume
-    Path = "/{{ nfs-ganesha_volume_name }}";
+    Path = "/{{ nfs_ganesha_volume_name }}";
     FSAL {
       # any name
       name = GLUSTER;
       # hostname or IP address of this Node
-      hostname="{{ nfs-ganesha_hostname }}";
+      hostname="{{ nfs_ganesha_hostname }}";
       # Gluster volume name
-      volume="{{ nfs-ganesha_volume_name }}";
+      volume="{{ nfs_ganesha_volume_name }}";
       enable_upcall = true;
       Transport = tcp; # tcp or rdma
     }
     # config for root Squash
     Squash="No_root_squash";
     # NFSv4 Pseudo path
-    Pseudo="/{{ nfs-ganesha_volume_name }}";
+    Pseudo="/{{ nfs_ganesha_volume_name }}";
     # allowed security options
     SecType="sys";
 }
