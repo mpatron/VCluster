@@ -11,3 +11,38 @@ sudo kubectl exec -it glusterfs -- bash
 # Inside pod
 mount | grep gluster
 ~~~
+
+
+## Method 1 — Connecting to NFS directly with Pod manifest
+
+~~~yaml
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+  labels:
+    app.kubernetes.io/name: alpine
+    app.kubernetes.io/part-of: VCluster_Demo_NFS
+    app.kubernetes.io/created-by: mpatron
+    app.kubernetes.io/version: "4.9.4"
+    app.kubernetes.io/managed-by: manualy
+    app.kubernetes.io/component: server
+spec:
+  containers:
+    - name: alpine
+      image: alpine:latest
+      command:
+        - touch
+        - /data/test
+      volumeMounts:
+        - name: nfs-volume
+          mountPath: /data
+  volumes:
+    - name: nfs-volume
+      nfs:
+        server: node0
+        path: /kubegfs
+        readOnly: no
+EOF
+~~~
