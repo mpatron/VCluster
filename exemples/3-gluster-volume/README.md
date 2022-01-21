@@ -12,7 +12,6 @@ sudo kubectl exec -it glusterfs -- bash
 mount | grep gluster
 ~~~
 
-
 ## Method 1 — Connecting to NFS directly with Pod manifest
 
 ~~~yaml
