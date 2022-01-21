@@ -74,6 +74,12 @@ vagrant@node0:~$ mountstats
 # No NFS mount points were found
 vagrant@node0:~$ showmount -e localhost
 # clnt_create: RPC: Program not registered
+
+# test classique avec le client nfs
+sudo mkdir -p /mnt/nfs
+sudo mount -t nfs node0:/kubegfs /mnt/nfs
+sudo ls -la /mnt/nfs
+
 sudo systemctl stop nfs-ganesha.service && sudo systemctl start nfs-ganesha.service && sleep 5s && tail -n 40 /var/log/ganesha/ganesha.log && sudo systemctl status nfs-ganesha.service
 sudo systemctl status nfs-ganesha.service
 sudo vi /etc/ganesha/ganesha.conf
