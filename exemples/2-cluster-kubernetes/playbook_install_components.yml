@@ -28,7 +28,6 @@
       kubernetes.core.helm_repository:
         name: metallb
         repo_url: "https://metallb.github.io/metallb"
-      when: ansible_hostname == 'node0'
     # Création d'un namespace pour metallb
     - name: "[MetalLB] Create a k8s namespace"
       kubernetes.core.k8s:
@@ -36,7 +35,6 @@
         api_version: v1
         kind: Namespace
         state: present
-      when: ansible_hostname == 'node0'
      # Installation de metallb sur la cible avec helm à partir de son fichier de configuration
     - name: "[MetalLB] Deploy latest version of metallb chart inside metallb-system namespace with values"
       kubernetes.core.helm:
@@ -45,4 +43,3 @@
         release_namespace: metallb-system
         update_repo_cache: true
         values: "{{ lookup('template', 'metallb_values.yml') | from_yaml }}"
-      when: ansible_hostname == 'node0'
