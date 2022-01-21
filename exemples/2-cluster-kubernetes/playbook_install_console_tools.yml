@@ -8,54 +8,55 @@
   tasks:
     # mkdir -p ~/.kube && sudo sh -c "cat /root/.kube/config > /home/vagrant/.kube/config" && sudo chown $USER:$USER ~/.kube/config && echo 'source <(kubectl completion bash)' >>~/.bashrc && echo 'source <(helm  completion bash)' >>~/.bashrc && source <(kubectl completion bash) && source <(helm  completion bash)
     - name: "Check if kubectl completion is already defined"
-      become_user: root
-      lineinfile:
-        path: "~/.bashrc"
+      ansible.builtin.lineinfile:
+        path: "/root/.bashrc"
         line: "source <(kubectl completion bash)"
         state: present
         backup: yes
     - name: "Check if helm completion is already defined"
-      become_user: root
-      lineinfile:
-        path: "~/.bashrc"
+      ansible.builtin.lineinfile:
+        path: "/root/.bashrc"
         line: "source <(helm completion bash)"
         state: present
         backup: yes
     - name: Create a directory ~/.kube for vagrant if it does not exist
       ansible.builtin.file:
-        path: ~/.kube
+        path: /home/vagrant/.kube
         state: directory
+        owner: vagrant
+        group: vagrant
         mode: '0750'
-    - name: Transfer file from node0 to les autres
-      synchronize:
-        src: /root/.kube/config
-        dest: /home/vagrant/.kube/config
-      delegate_to: "{{ hostvars[ groups['k8s-master'][0] ].ansible_host }}"
-    - name: Copy a "kubeconfig" file for vagrant user
+    - name: Copy a "kubeconfig" file from root to vagrant user
       ansible.builtin.copy:
         src: /root/.kube/config
         dest: /home/vagrant/.kube/config
         remote_src: yes
-        follow: no
         owner: vagrant
         group: vagrant
         mode: '0640'
         backup: yes
+      when: ansible_hostname == hostvars[groups['k8s-master'][0] ].ansible_hostname
+    - name: Transfer file kubeconfig from node0 to other
+      ansible.posix.synchronize:
+        src: /home/vagrant/.kube/config
+        dest: /home/vagrant/.kube/config
+        links: no
+      delegate_to: "{{ hostvars[ groups['k8s-master'][0] ].ansible_hostname }}"
+    - name: kubeconfig" file for vagrant user
+      ansible.builtin.file:
+        path: /home/vagrant/.kube/config
+        owner: vagrant
+        group: vagrant
+        mode: '0750'
     - name: "Check if kubectl completion is already defined"
-      lineinfile:
-        path: "~/.bashrc"
+      ansible.builtin.lineinfile:
+        path: "/home/vagrant/.bashrc"
         line: "source <(kubectl completion bash)"
         state: present
         backup: yes
     - name: "Check if helm completion is already defined"
-      become: yes
-      become_user: vagrant
-      lineinfile:
-        path: "~/.bashrc"
+      ansible.builtin.lineinfile:
+        path: "/home/vagrant/.bashrc"
         line: "source <(helm completion bash)"
         state: present
         backup: yes
-# ansible-playbook -i ./inventory playbook_install_console_tools.yml
-# ansible node0 -i inventory -m copy -a "src=/root/.kube/config dest=/home/vagrant/.kube/config remote_src=yes follow=yes owner=vagrant group=vagrant mode='0640' backup=yes"
-# ansible node0 -i inventory -m copy -a "src=/root/toto dest=/home/vagrant/toto remote_src=yes follow=yes owner=vagrant group=vagrant mode='0640' backup=yes"
-        
