@@ -7,47 +7,42 @@
 
   tasks:
 
-    # Afin d'utiliser le module kubernetes.core, il faut le module pip kubernetes sur la cible pour qu'il puisse s'exécuter.
-    - name: Ensure PIP3 is installed.
+    # Afin d'utiliser le module kubernetes.core, il faut le module pip kubernetes sur la cible pour qu'il puisse s'exécuter (et pip).
+    - name: "[Ansible module kubernetes] Ensure PIP3 is installed."
       apt:
         name:
           - python3-pip
         state: present
-    - name: Install kubernetes python package on version 21.7.0
+    - name: "[Ansible module kubernetes] Install kubernetes python package on version 21.7.0"
       pip:
         name: kubernetes
+    # Installation du plugins helm diff pour faciliter les upgrades
+    - name: "[Ansible module kubernetes] Install Helm diff plugin"
+      kubernetes.core.helm_plugin:
+        plugin_path: https://github.com/databus23/helm-diff
+        state: present
 
     # Installation de metallb
     # Enregistrement de son repo helm
-    - name: Add metallb chart repo
+    - name: "[MetalLB] Add metallb chart repo"
       kubernetes.core.helm_repository:
         name: metallb
         repo_url: "https://metallb.github.io/metallb"
       when: ansible_hostname == 'node0'
     # Création d'un namespace pour metallb
-    - name: Create a k8s namespace
+    - name: "[MetalLB] Create a k8s namespace"
       kubernetes.core.k8s:
         name: metallb-system
         api_version: v1
         kind: Namespace
         state: present
       when: ansible_hostname == 'node0'
-    # Placement du fichier de configuration de metallb sur la cible
-    - name: Copy a new "metallb_values.yml" file into place, backing up the original if it differs from the copied version
-      ansible.builtin.copy:
-        src: files/metallb_values.yml
-        dest: /tmp/metallb_values.yml
-        owner: root
-        group: root
-        mode: '0644'
-        backup: yes
-      when: ansible_hostname == 'node0'
-    # Installation de metallb sur la cible avec helm et son fichier de configuration
-    - name: Deploy latest version of metallb chart inside metallb-system namespace with values
+     # Installation de metallb sur la cible avec helm à partir de son fichier de configuration
+    - name: "[MetalLB] Deploy latest version of metallb chart inside metallb-system namespace with values"
       kubernetes.core.helm:
         name: metallb
         chart_ref: metallb/metallb
         release_namespace: metallb-system
-        values_files:
-          - /tmp/metallb_values.yml
+        update_repo_cache: true
+        values: "{{ lookup('template', 'metallb_values.yml') | from_yaml }}"
       when: ansible_hostname == 'node0'
