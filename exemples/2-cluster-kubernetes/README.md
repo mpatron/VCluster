@@ -200,3 +200,4 @@ pip3 install kubernetes
 - [ansible-role-glusterfs](https://github.com/geerlingguy/ansible-role-glusterfs)
 - [ansible-for-devops](https://github.com/geerlingguy/ansible-for-devops/tree/master/kubernetes)
 - [Old migration](https://platform9.com/blog/kubernetes-upgrade-the-definitive-guide-to-do-it-yourself/)
+- [Module ansible kubernetes core](https://github.com/ansible-collections/kubernetes.core/tree/main/docs)
