@@ -1,5 +1,5 @@
 # ansible-playbook ./setup.yml  -v -vvvv -u ubuntu -i ./host.yml 
-# cd /vagrant && ansible-playbook /vagrant/provision.yml  -vvv -i /vagrant/inventory.txt  -l all
+# cd /vagrant && ansible-playbook /vagrant/provision.yml  -vvv -i /vagrant/inventory  -l all
 ---
 - name: Playbook de création de cluster
   hosts: [all]

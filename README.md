@@ -22,7 +22,7 @@ Exécuter une commande sur tous les noeux à partir du node0
 
 ~~~bash
 ansible all -m raw -a "df -kh"
-ansible gluster -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
+ansible all -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
 ~~~
 
 ## myLib documentation

@@ -41,6 +41,8 @@ Vagrant.configure("2") do |config|
     vb.cpus = VM_CPU
     vb.memory = VM_RAM
     vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
+    vb.customize ["modifyvm", :id, "--audio", "none"]
+    vb.customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']
     vb.linked_clone = true
   end
   config.vm.boot_timeout = 300 # default=300s
@@ -66,12 +68,12 @@ SHELL1
 sudo sed -i -e "\\#PasswordAuthentication no# s#PasswordAuthentication no#PasswordAuthentication yes#g" /etc/ssh/sshd_config
 sudo systemctl restart sshd
 sudo mkdir -p /etc/ansible && sudo cat /vagrant/ansible.cfg > /etc/ansible/ansible.cfg
-sudo sh -c 'cat /vagrant/inventory.txt > /etc/ansible/hosts'
+sudo sh -c 'cat /vagrant/inventory > /etc/ansible/hosts'
 sudo apt update && sudo apt install sshpass
 SHELL0
 
 #    machine.vm.provision "shell", inline: "sudo mkdir -p /etc/ansible && sudo cat /vagrant/ansible.cfg > /etc/ansible/ansible.cfg", run: "always"
-#    machine.vm.provision "shell", inline: "sudo sh -c 'cat /vagrant/inventory.txt > /etc/ansible/hosts'", run: "always"
+#    machine.vm.provision "shell", inline: "sudo sh -c 'cat /vagrant/inventory > /etc/ansible/hosts'", run: "always"
 #    machine.vm.provision "shell", inline: "sudo apt update && sudo apt install sshpass", run: "always"
     machine.vm.provision :ansible_local do |ansible|
       ansible.playbook       = "provision.yml"
@@ -79,7 +81,7 @@ SHELL0
       # ansible.install        = true # default=true
       ansible.compatibility_mode = "auto"
       ansible.limit          = "all" # or only "nodes" group, etc.
-      ansible.inventory_path = "inventory.txt"
+      ansible.inventory_path = "inventory"
     end
 
   end

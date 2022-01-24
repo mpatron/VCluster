@@ -145,4 +145,3 @@ spec:
         claimName: nfs-pvc
 EOF
 ~~~
-  
