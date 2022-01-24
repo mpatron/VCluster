@@ -93,12 +93,12 @@ helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs
   --set nfs.path=/kubegfs
 ~~~
 
-~~~yaml
+~~~bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nfs-test
+  name: nfspvc
   labels:
     storage.k8s.io/name: nfs
     storage.k8s.io/part-of: kubernetes-complete-reference
@@ -111,9 +111,12 @@ spec:
     requests:
       storage: 1Gi
 EOF
+
+# Activiter le default storageclass
+kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ~~~
 
-~~~yaml
+~~~bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Pod

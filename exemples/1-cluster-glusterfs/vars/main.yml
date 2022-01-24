@@ -10,5 +10,5 @@ gluster_brick_name: kubegfs
 # glusterfs_ppa_use: true
 # glusterfs_ppa_version: 10
 
-nfs_ganesha_ppa_use: true
-nfs_ganesha_ppa_version: "3.0"
+# nfs_ganesha_ppa_use: true
+# nfs_ganesha_ppa_version: "4"
