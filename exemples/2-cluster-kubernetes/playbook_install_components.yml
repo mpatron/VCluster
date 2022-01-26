@@ -22,7 +22,8 @@
         plugin_path: https://github.com/databus23/helm-diff
         state: present
 
-    # Installation de metallb
+    # #########################################################################
+    # Installation de metallb    
     # Enregistrement de son repo helm
     - name: "[MetalLB] Add metallb chart repo"
       kubernetes.core.helm_repository:
@@ -31,10 +32,10 @@
     # Création d'un namespace pour metallb
     - name: "[MetalLB] Create a k8s namespace"
       kubernetes.core.k8s:
-        name: metallb-system
+        state: present
         api_version: v1
         kind: Namespace
-        state: present
+        name: metallb-system
      # Installation de metallb sur la cible avec helm à partir de son fichier de configuration
     - name: "[MetalLB] Deploy latest version of metallb chart inside metallb-system namespace with values"
       kubernetes.core.helm:
@@ -43,3 +44,73 @@
         release_namespace: metallb-system
         update_repo_cache: true
         values: "{{ lookup('template', 'metallb_values.yml') | from_yaml }}"
+    # #########################################################################
+
+    # #########################################################################
+    # Installation de prometheus    
+    # Enregistrement de son repo helm
+    - name: "[Provisionning] Add prometheus chart repo"
+      kubernetes.core.helm_repository:
+        name: bitnami
+        repo_url: "https://charts.bitnami.com/bitnami"
+    # Création d'un namespace pour metallb
+    - name: "[Provisionning] Create a k8s namespace"
+      kubernetes.core.k8s:
+        state: present
+        api_version: v1
+        kind: Namespace
+        name: monitoring
+     # Installation de metallb sur la cible avec helm à partir de son fichier de configuration
+    - name: "[Provisionning] Deploy latest version of prometheus chart inside monitoring namespace with values"
+      kubernetes.core.helm:
+        name: prometheus
+        chart_ref:  bitnami/kube-prometheus
+        release_namespace: monitoring
+        update_repo_cache: true
+        values: "{{ lookup('template', 'prometheus_values.yml') | from_yaml }}"
+    # #########################################################################
+
+    # #########################################################################
+    # Installation de grafana    
+    # Enregistrement de son repo helm
+    - name: "[Provisionning] Add grafana chart repo"
+      kubernetes.core.helm_repository:
+        name: bitnami
+        repo_url: "https://charts.bitnami.com/bitnami"
+    # Création d'un namespace pour grafana
+    - name: "[Provisionning] Create a k8s namespace"
+      kubernetes.core.k8s:
+        state: present
+        api_version: v1
+        kind: Namespace
+        name: monitoring
+    # Création d'un pvc pour grafana
+#    - name: "[Provisionning] Create a k8s PVC for grafana"
+#      kubernetes.core.k8s:
+#        kind: PersistentVolumeClaim
+#        state: present
+#        definition:
+#          apiVersion: v1
+#          kind: PersistentVolumeClaim
+#          metadata:
+#            name: grafana
+#            namespace: monitoring
+#            labels:
+#              storage.k8s.io/name: nfs
+#              storage.k8s.io/part-of: monitoring
+#          spec:
+#            accessModes:
+#              - ReadWriteMany
+#            storageClassName: nfs-client
+#            resources:
+#              requests:
+#                storage: 10Gi
+     # Installation de grafana sur la cible avec helm à partir de son fichier de configuration
+    - name: "[Provisionning] Deploy latest version of grafana chart inside monitoring namespace with values"
+      kubernetes.core.helm:
+        name: grafana
+        chart_ref:  bitnami/grafana
+        release_namespace: monitoring
+        update_repo_cache: true
+        values: "{{ lookup('template', 'grafana_values.yml') | from_yaml }}"
+    # #########################################################################

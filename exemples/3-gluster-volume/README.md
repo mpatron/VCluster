@@ -102,7 +102,6 @@ metadata:
   labels:
     storage.k8s.io/name: nfs
     storage.k8s.io/part-of: kubernetes-complete-reference
-    storage.k8s.io/created-by: ssbostan
 spec:
   accessModes:
     - ReadWriteMany
