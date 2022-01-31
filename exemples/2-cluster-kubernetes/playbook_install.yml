@@ -33,3 +33,9 @@
 
     - role: geerlingguy.helm
       tags: ['kubernetes']
+
+  tasks:
+
+    - name: Bloquer les mise à jour de kubernetes
+      shell: |
+        sudo apt-mark hold kubeadm kubelet kubectl
