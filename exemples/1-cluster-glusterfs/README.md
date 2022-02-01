@@ -93,6 +93,7 @@ backtrace
 q
 ~~~
 
+~~~bash
 apt-get update && apt-get install -y iputils-ping iproute2 apt-file nfs-common vim
 vagrant@node0:~$ cat ubuntu-v2.yml
 apiVersion: v1
@@ -119,6 +120,7 @@ spec:
 
 mount -t nfs -o defaults,rw,user,umask=022,uid=1000 node0:/kubegfs /mnt/nfs
 mount -t nfs -o nfsvers=4,rw,defaults 192.168.56.140:/kubegfs /mnt/nfs
+~~~
 
 ## Sources
 
