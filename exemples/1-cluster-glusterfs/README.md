@@ -93,6 +93,25 @@ backtrace
 q
 ~~~
 
+apt-get update && apt-get install -y iputils-ping iproute2 apt-file nfs-common
+vagrant@node0:~$ cat ubuntu-v2.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu
+  labels:
+    app: ubuntu
+spec:
+  containers:
+  - name: ubuntu
+    image: ubuntu:latest
+    command: ["/bin/sleep", "3650d"]
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Always
+
+mount -t nfs -o defaults,rw,user,umask=022,uid=1000 node0:/kubegfs /mnt/nfs
+mount -t nfs -o nfsvers=4,rw,defaults 192.168.56.140:/kubegfs /mnt/nfs
+
 ## Sources
 
 Des roles de geerlingguy sont utilisés. Et un roles pour installer nfs_ganesha_gluster a été construit, je n'ai su trouver un role déjà fabriquer pour faire cela. Le code se trouve sur [https://github.com/mpatron/ansible-role-nfs-ganesha-gluster] et sur [https://galaxy.ansible.com/mpatron/ansible_role_nfs_ganesha_gluster].
