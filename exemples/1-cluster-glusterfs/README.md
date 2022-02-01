@@ -93,7 +93,7 @@ backtrace
 q
 ~~~
 
-apt-get update && apt-get install -y iputils-ping iproute2 apt-file nfs-common
+apt-get update && apt-get install -y iputils-ping iproute2 apt-file nfs-common vim
 vagrant@node0:~$ cat ubuntu-v2.yml
 apiVersion: v1
 kind: Pod
@@ -102,11 +102,19 @@ metadata:
   labels:
     app: ubuntu
 spec:
+  volumes:
+    - name: nfs-volume
+      nfs:
+        server: 192.168.56.141
+        path: /mnt/nfsserver
   containers:
   - name: ubuntu
     image: ubuntu:latest
     command: ["/bin/sleep", "3650d"]
     imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - name: nfs-volume
+        mountPath: /var/nfs
   restartPolicy: Always
 
 mount -t nfs -o defaults,rw,user,umask=022,uid=1000 node0:/kubegfs /mnt/nfs
