@@ -2,11 +2,21 @@
 
 ## Prosionning
 
+Windows 
+
 ~~~powershell
 vagrant plugin update 
 vagrant up --provision --provider virtualbox
 vagrant destroy -f
 vagrant global-status
+~~~
+
+Linux
+
+~~~bash
+vagrant plugin install vagrant-libvirt
+vagrant plugin install vagrant-mutate
+vagrant up --provision --provider=libvirt
 ~~~
 
 ## Commandes utiles
