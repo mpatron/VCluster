@@ -3,7 +3,7 @@ node0  ansible_host=192.168.56.140 # ansible_connection=local
 node1  ansible_host=192.168.56.141
 node2  ansible_host=192.168.56.142
 node3  ansible_host=192.168.56.143
-node4  ansible_host=192.168.56.144
+# node4  ansible_host=192.168.56.144
 
 [all:vars]
 ansible_user=vagrant
