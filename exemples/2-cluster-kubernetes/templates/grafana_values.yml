@@ -1,7 +1,9 @@
 ---
 service:
   type: LoadBalancer
+updateStrategy:
+  type: Recreate
 persistence:
-  storageClass: "nfs-client"
-# existingClaim: "nfspvc"
+  storageClass: "{{ DefaultStorageClassName }}"
+# existingClaim: "{{ DefaultPersistanceVolume }}"
 # size: 5Gi

@@ -70,7 +70,7 @@
         release_namespace: nfs-provisioner
         update_repo_cache: true
         values: "{{ lookup('template', 'nfs_values.yml') | from_yaml }}"
-    - name: "[NFS] StorageClassName nfs-client"
+    - name: "[NFS] StorageClassName {{ DefaultStorageClassName }}"
       kubernetes.core.k8s:
         kind: PersistentVolumeClaim
         state: present
@@ -78,7 +78,7 @@
           apiVersion: v1
           kind: PersistentVolumeClaim
           metadata:
-            name: nfspvc
+            name: "{{ DefaultPersistanceVolume }}"
             namespace: default
             labels:
               storage.k8s.io/name: nfs
@@ -86,20 +86,17 @@
           spec:
             accessModes:
               - ReadWriteMany
-            storageClassName: nfs-client
+            storageClassName: "{{ DefaultStorageClassName }}"
             resources:
               requests:
                 storage: 10Gi
-    # Patch existing StorageClass nfs-client : to default
-    - name: add label to existing namespace
+    - name: "[NFS] Patch existing StorageClass {{ DefaultStorageClassName }} : to default"
       kubernetes.core.k8s:
         state: patched
         kind: StorageClass
-        name: nfs-client
+        name: "{{ DefaultStorageClassName }}"
         definition:
           metadata:
             annotations:
               storageclass.kubernetes.io/is-default-class: "true"
-        # #########################################################################
-    # kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-
+    # #########################################################################
