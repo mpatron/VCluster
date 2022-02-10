@@ -2,4 +2,6 @@
 service:
   type: LoadBalancer
 persistence:
-  storageClass: nfs-client
+  storageClass: "nfs-client"
+# existingClaim: "nfspvc"
+# size: 5Gi

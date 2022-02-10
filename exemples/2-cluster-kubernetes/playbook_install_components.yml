@@ -84,27 +84,6 @@
         api_version: v1
         kind: Namespace
         name: monitoring
-    # Création d'un pvc pour grafana
-#    - name: "[Provisionning] Create a k8s PVC for grafana"
-#      kubernetes.core.k8s:
-#        kind: PersistentVolumeClaim
-#        state: present
-#        definition:
-#          apiVersion: v1
-#          kind: PersistentVolumeClaim
-#          metadata:
-#            name: grafana
-#            namespace: monitoring
-#            labels:
-#              storage.k8s.io/name: nfs
-#              storage.k8s.io/part-of: monitoring
-#          spec:
-#            accessModes:
-#              - ReadWriteMany
-#            storageClassName: nfs-client
-#            resources:
-#              requests:
-#                storage: 10Gi
      # Installation de grafana sur la cible avec helm à partir de son fichier de configuration
     - name: "[Provisionning] Deploy latest version of grafana chart inside monitoring namespace with values"
       kubernetes.core.helm:

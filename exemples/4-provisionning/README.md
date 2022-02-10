@@ -111,6 +111,8 @@ echo Password: $(kubectl get secret --namespace default keycloak -o jsonpath="{.
 
 ## Demo Spark
 
+En devenir .. [https://github.com/kubernetes/examples/tree/master/staging/spark/spark-gluster]
+
 ~~~bash
 # ...
 # Mettre en place NFS en methode 3

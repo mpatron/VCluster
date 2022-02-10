@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gluster-claim
+  namespace: glusterfs-system
+spec:
+  accessModes:
+  - ReadWriteMany
+  # storageClassName: gluster-client On ne peut pas, on ne veut pas utiliser Hekiti
+  resources:
+     requests:
+       storage: 1Gi
+  volumeName: gluster-pv

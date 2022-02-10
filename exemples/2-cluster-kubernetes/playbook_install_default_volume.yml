@@ -1,0 +1,105 @@
+---
+- hosts: node0
+  become: yes
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+
+    # Afin d'utiliser le module kubernetes.core, il faut le module pip kubernetes sur la cible pour qu'il puisse s'exécuter (et pip).
+    - name: "[Ansible module kubernetes] Ensure PIP3 is installed."
+      apt:
+        name:
+          - python3-pip
+        state: present
+    - name: "[Ansible module kubernetes] Install kubernetes python package on version 21.7.0"
+      pip:
+        name: kubernetes
+    # Installation du plugins helm diff pour faciliter les upgrades
+    - name: "[Ansible module kubernetes] Install Helm diff plugin"
+      kubernetes.core.helm_plugin:
+        plugin_path: https://github.com/databus23/helm-diff
+        state: present
+
+    # #########################################################################
+    # Installation de GlusterFS comme default volume
+
+    # Création d'un namespace pour GlusterFS
+    - name: "[GlusterFS] Create a k8s namespace"
+      kubernetes.core.k8s:
+        state: present
+        api_version: v1
+        kind: Namespace
+        name: glusterfs-system
+    - name: "[GlusterFS] Creation du endpoint des serveurs fournissant glusterfs"
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('template', '1-glusterfs-endpoints.yaml') | from_yaml }}"
+    - name: "[GlusterFS] Creation du service glusterfs dans kubernetes"
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('template', '2-glusterfs-service.yaml') | from_yaml }}"
+    - name: "[GlusterFS] Creation du persistance volume à partir du service glusterfs"
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('template', '3-gluster-pv.yaml') | from_yaml }}"
+#    - name: "[GlusterFS] Creation du persistance volume clain à partir du persistance volume glusterfs"
+#      kubernetes.core.k8s:
+#        state: present
+#        definition: "{{ lookup('template', '4-gluster-pvc.yaml') | from_yaml }}"
+    
+    # #########################################################################
+    # Exposition dans kubernetes par NFS et une storageclassname
+    - name: "[NFS] Add nfs chart repo"
+      kubernetes.core.helm_repository:
+        name: nfs-subdir-external-provisioner
+        repo_url: "https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner"
+    # Création d'un namespace pour nfs
+    - name: "[NFS] Create a k8s namespace"
+      kubernetes.core.k8s:
+        state: present
+        api_version: v1
+        kind: Namespace
+        name: nfs-provisioner
+     # Installation de nfs sur la cible avec helm à partir de son fichier de configuration
+    - name: "[NFS] Deploy latest version of nfs chart inside nfs-provisioner namespace with values"
+      kubernetes.core.helm:
+        name: nfs-subdir-external-provisioner
+        chart_ref: nfs-subdir-external-provisioner/nfs-subdir-external-provisioner
+        release_namespace: nfs-provisioner
+        update_repo_cache: true
+        values: "{{ lookup('template', 'nfs_values.yml') | from_yaml }}"
+    - name: "[NFS] StorageClassName nfs-client"
+      kubernetes.core.k8s:
+        kind: PersistentVolumeClaim
+        state: present
+        definition:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+            name: nfspvc
+            namespace: default
+            labels:
+              storage.k8s.io/name: nfs
+              storage.k8s.io/part-of: kubernetes-complete-reference
+          spec:
+            accessModes:
+              - ReadWriteMany
+            storageClassName: nfs-client
+            resources:
+              requests:
+                storage: 10Gi
+    # Patch existing StorageClass nfs-client : to default
+    - name: add label to existing namespace
+      kubernetes.core.k8s:
+        state: patched
+        kind: StorageClass
+        name: nfs-client
+        definition:
+          metadata:
+            annotations:
+              storageclass.kubernetes.io/is-default-class: "true"
+        # #########################################################################
+    # kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
