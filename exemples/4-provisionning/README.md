@@ -98,6 +98,7 @@ https://grafana.com/api/dashboards/7249/revisions/1/download
 
 
 helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
 helm show values bitnami/keycloak
 helm install keycloak bitnami/keycloak
 
