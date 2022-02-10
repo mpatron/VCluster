@@ -2,7 +2,7 @@
 swap_file_state: absent
 
 kubernetes_version: '1.23'
-kubernetes_allow_pods_on_master: False
+kubernetes_allow_pods_on_master: true
 kubernetes_pod_network:
   # Calico CNI.
   cni: 'calico'

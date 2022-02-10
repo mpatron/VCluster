@@ -13,8 +13,10 @@ ansible_ssh_pass=vagrant
 node0 ansible_host=192.168.56.140 kubernetes_role=master
 
 [k8s-nodes]
+# node0 ansible_host=192.168.56.140 kubernetes_role=node
 node1 ansible_host=192.168.56.141 kubernetes_role=node
 node2 ansible_host=192.168.56.142 kubernetes_role=node
+node3 ansible_host=192.168.56.143 kubernetes_role=node
 
 [k8s:children]
 k8s-master
