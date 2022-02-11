@@ -1,3 +1,0 @@
-nfs:
-  server: node0
-  path: /kubegfs

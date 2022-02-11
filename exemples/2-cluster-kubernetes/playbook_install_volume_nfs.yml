@@ -23,33 +23,6 @@
         state: present
 
     # #########################################################################
-    # Installation de GlusterFS comme default volume
-
-    # Création d'un namespace pour GlusterFS
-    - name: "[GlusterFS] Create a k8s namespace"
-      kubernetes.core.k8s:
-        state: present
-        api_version: v1
-        kind: Namespace
-        name: glusterfs-system
-    - name: "[GlusterFS] Creation du endpoint des serveurs fournissant glusterfs"
-      kubernetes.core.k8s:
-        state: present
-        definition: "{{ lookup('template', '1-glusterfs-endpoints.yaml') | from_yaml }}"
-    - name: "[GlusterFS] Creation du service glusterfs dans kubernetes"
-      kubernetes.core.k8s:
-        state: present
-        definition: "{{ lookup('template', '2-glusterfs-service.yaml') | from_yaml }}"
-    - name: "[GlusterFS] Creation du persistance volume à partir du service glusterfs"
-      kubernetes.core.k8s:
-        state: present
-        definition: "{{ lookup('template', '3-gluster-pv.yaml') | from_yaml }}"
-#    - name: "[GlusterFS] Creation du persistance volume clain à partir du persistance volume glusterfs"
-#      kubernetes.core.k8s:
-#        state: present
-#        definition: "{{ lookup('template', '4-gluster-pvc.yaml') | from_yaml }}"
-    
-    # #########################################################################
     # Exposition dans kubernetes par NFS et une storageclassname
     - name: "[NFS] Add nfs chart repo"
       kubernetes.core.helm_repository:
@@ -67,9 +40,9 @@
       kubernetes.core.helm:
         name: nfs-subdir-external-provisioner
         chart_ref: nfs-subdir-external-provisioner/nfs-subdir-external-provisioner
-        release_namespace: nfs-provisioner
+        namespace: nfs-provisioner
         update_repo_cache: true
-        values: "{{ lookup('template', 'nfs_values.yml') | from_yaml }}"
+        values: "{{ lookup('template', 'external_provisioner_nfs_values.yml') | from_yaml }}"
     - name: "[NFS] StorageClassName {{ DefaultStorageClassName }}"
       kubernetes.core.k8s:
         kind: PersistentVolumeClaim

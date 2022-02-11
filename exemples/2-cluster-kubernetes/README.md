@@ -218,3 +218,16 @@ kubectl create secret docker-registry myregistrykey \
 - [ansible-for-devops](https://github.com/geerlingguy/ansible-for-devops/tree/master/kubernetes)
 - [Old migration](https://platform9.com/blog/kubernetes-upgrade-the-definitive-guide-to-do-it-yourself/)
 - [Module ansible kubernetes core](https://github.com/ansible-collections/kubernetes.core/tree/main/docs)
+
+
+
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: node0-nfs
+provisioner: node0/external-nfs
+parameters:
+  server: nfs-server.example.com
+  path: /share
+  readOnly: "false"

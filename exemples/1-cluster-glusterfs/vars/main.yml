@@ -7,8 +7,8 @@ gluster_brick_dir: /srv/gluster/brick
 gluster_brick_name: kubegfs
 
 # ne fonctionne pas avec ganesha-nfs
-# glusterfs_ppa_use: true
-# glusterfs_ppa_version: 10
+glusterfs_ppa_use: true
+glusterfs_ppa_version: 10
 
-# nfs_ganesha_ppa_use: true
-# nfs_ganesha_ppa_version: "4"
+nfs_ganesha_ppa_use: true
+nfs_ganesha_ppa_version: "4"

@@ -36,9 +36,12 @@ ansible all -m raw -a "df -kh"
 ansible all -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
 ~~~
 
-## myLib documentation
+## Kubernetes status
 
-See documentation:
+systemctl daemon-reload && systemctl status kubelet
+
+
+# See documentation:
 
 - [Installation de GlusterFS](exemples/1-cluster-glusterfs/README.md)
 - [Installation de Kubernetes](exemples/2-cluster-kubernetes/README.md)

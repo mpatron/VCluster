@@ -1,0 +1,7 @@
+nfs:
+  server: node0
+  path: /kubegfs
+storageClass:
+  create: true
+  onDelete: true
+  accessModes: ReadWriteMany
