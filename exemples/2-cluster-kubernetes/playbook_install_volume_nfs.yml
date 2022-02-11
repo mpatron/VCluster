@@ -43,33 +43,33 @@
         namespace: nfs-provisioner
         update_repo_cache: true
         values: "{{ lookup('template', 'external_provisioner_nfs_values.yml') | from_yaml }}"
-    - name: "[NFS] StorageClassName {{ DefaultStorageClassName }}"
-      kubernetes.core.k8s:
-        kind: PersistentVolumeClaim
-        state: present
-        definition:
-          apiVersion: v1
-          kind: PersistentVolumeClaim
-          metadata:
-            name: "{{ DefaultPersistanceVolume }}"
-            namespace: default
-            labels:
-              storage.k8s.io/name: nfs
-              storage.k8s.io/part-of: kubernetes-complete-reference
-          spec:
-            accessModes:
-              - ReadWriteMany
-            storageClassName: "{{ DefaultStorageClassName }}"
-            resources:
-              requests:
-                storage: 10Gi
-    - name: "[NFS] Patch existing StorageClass {{ DefaultStorageClassName }} : to default"
-      kubernetes.core.k8s:
-        state: patched
-        kind: StorageClass
-        name: "{{ DefaultStorageClassName }}"
-        definition:
-          metadata:
-            annotations:
-              storageclass.kubernetes.io/is-default-class: "true"
+#    - name: "[NFS] StorageClassName {{ DefaultStorageClassName }}"
+#      kubernetes.core.k8s:
+#        kind: PersistentVolumeClaim
+#        state: present
+#        definition:
+#          apiVersion: v1
+#          kind: PersistentVolumeClaim
+#          metadata:
+#            name: "{{ DefaultPersistanceVolume }}"
+#            namespace: default
+#            labels:
+#              storage.k8s.io/name: nfs
+#              storage.k8s.io/part-of: kubernetes-complete-reference
+#          spec:
+#            accessModes:
+#              - ReadWriteMany
+#            storageClassName: "{{ DefaultStorageClassName }}"
+#            resources:
+#              requests:
+#                storage: 10Gi
+#    - name: "[NFS] Patch existing StorageClass {{ DefaultStorageClassName }} : to default"
+#      kubernetes.core.k8s:
+#        state: patched
+#        kind: StorageClass
+#        name: "{{ DefaultStorageClassName }}"
+#        definition:
+#          metadata:
+#            annotations:
+#              storageclass.kubernetes.io/is-default-class: "true"
     # #########################################################################
