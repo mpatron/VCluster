@@ -92,6 +92,8 @@
         namespace: monitoring
         update_repo_cache: true
         values: "{{ lookup('template', 'grafana_values.yml') | from_yaml }}"
+    # echo "User: admin"
+    # echo "Password: $(kubectl get secret grafana-admin --namespace monitoring -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 --decode)"
     # #########################################################################
 
     # #########################################################################
