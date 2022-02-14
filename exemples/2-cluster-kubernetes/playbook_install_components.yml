@@ -115,7 +115,11 @@
     # puis à la console faire :
     # kubectl exec -it -n monitoring grafana-5b65844779-r4pnk -- bash
     # Puis dans le pods faire (la variable existe dans le pod et doit être le bon mot de passe)
-    # grafana-cli admin reset-admin-password $GF_SECURITY_ADMIN_PASSWORD    
+    # grafana-cli admin reset-admin-password $GF_SECURITY_ADMIN_PASSWORD  
+    # puis dans l'iHM ajouter à la main la source prometheus
+    # echo "http://"$(kubectl get service -n monitoring prometheus-kube-prometheus-prometheus -o jsonpath="{.status.loadBalancer.ingress[0].ip}"):9090
+    # Puis configurer avec le dashboard kubernetes
+    # https://grafana.com/api/dashboards/7249/revisions/1/download  
     # #########################################################################
 
     # #########################################################################
