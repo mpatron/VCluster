@@ -2,7 +2,13 @@
 service:
   type: LoadBalancer
 updateStrategy:
-  type: Recreate
+  type: RollingUpdate # Recreate sur pv rwOnce ou RollingUpdate
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+#admin:
+#  user: "admin"
+#  password: "D8cu6XlCct"
 persistence:
   storageClass: "{{ DefaultStorageClassName }}"
 # existingClaim: "{{ DefaultPersistanceVolume }}"

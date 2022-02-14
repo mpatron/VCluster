@@ -23,7 +23,7 @@
         state: present
 
     # #########################################################################
-    # Installation de metallb    
+    # Installation de metallb pour exposer les service sur des IP externe au cluster kubernetes
     # Enregistrement de son repo helm
     - name: "[MetalLB] Add metallb chart repo"
       kubernetes.core.helm_repository:
@@ -47,7 +47,7 @@
     # #########################################################################
 
     # #########################################################################
-    # Installation de prometheus    
+    # Installation de prometheus comme concentrateur de log
     # Enregistrement de son repo helm
     - name: "[Provisionning] Add prometheus chart repo"
       kubernetes.core.helm_repository:
@@ -71,7 +71,7 @@
     # #########################################################################
 
     # #########################################################################
-    # Installation de grafana    
+    # Installation de grafana comme UI de visualisation de log récupéré par prometheus
     # Enregistrement de son repo helm
     - name: "[Provisionning] Add grafana chart repo"
       kubernetes.core.helm_repository:
@@ -94,10 +94,32 @@
         values: "{{ lookup('template', 'grafana_values.yml') | from_yaml }}"
     # echo "User: admin"
     # echo "Password: $(kubectl get secret grafana-admin --namespace monitoring -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 --decode)"
+    - name: Grafana search admin password
+      ansible.builtin.command: 
+        cmd: bash -c "kubectl get secret --namespace monitoring grafana-admin -o jsonpath='{.data.GF_SECURITY_ADMIN_PASSWORD}' | base64 --decode"
+      register: grafanaPassword
+    - name: Grafana Port
+      ansible.builtin.command: 
+        cmd: bash -c "kubectl get services --namespace monitoring grafana -o jsonpath='{.spec.ports[0].port}'"
+      register: grafanaPort
+    - name: Grafana Address
+      ansible.builtin.command: 
+        cmd: bash -c "kubectl get services --namespace monitoring grafana -o jsonpath='{.status.loadBalancer.ingress[0].ip}'"
+      register: grafanaAddress
+    - name: Prints admin  and password
+      ansible.builtin.debug:
+        msg: "Url : http://{{ grafanaAddress.stdout }}:{{ grafanaPort.stdout }} Grafana Admin  admin / {{ grafanaPassword.stdout }}"
+    # Il existe un bug où le mot de passe en mémoire de grafana n'est pas synchro avec l'authentification. Alors à la main
+    # kubectl get secret -n monitoring grafana-admin -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 --decode ; echo
+    # pour récupérer le bon
+    # puis à la console faire :
+    # kubectl exec -it -n monitoring grafana-5b65844779-r4pnk -- bash
+    # Puis dans le pods faire (la variable existe dans le pod et doit être le bon mot de passe)
+    # grafana-cli admin reset-admin-password $GF_SECURITY_ADMIN_PASSWORD    
     # #########################################################################
 
     # #########################################################################
-    # Installation de minio    
+    # Installation de minio pour fournir une sortie au format S3 branché sur le StorageClass i.e. NFS
     # Enregistrement de son repo helm
     - name: "[Provisionning] Add minio chart repo"
       kubernetes.core.helm_repository:
