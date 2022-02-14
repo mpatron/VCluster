@@ -67,7 +67,7 @@
       kubernetes.core.helm:
         name: nfs-subdir-external-provisioner
         chart_ref: nfs-subdir-external-provisioner/nfs-subdir-external-provisioner
-        release_namespace: nfs-provisioner
+        namespace: nfs-provisioner
         update_repo_cache: true
         values: "{{ lookup('template', 'external_provisioner_nfs_values.yml') | from_yaml }}"
     - name: "[NFS] StorageClassName {{ DefaultStorageClassName }}"

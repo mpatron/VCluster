@@ -1,0 +1,14 @@
+global:
+  storageClass: "nfs-client"
+service:
+  type: LoadBalancer
+metrics:
+  prometheusAuthType: public
+  serviceMonitor:
+    enabled: true
+    namespace: "monitoring"
+persistence:
+  enabled: true
+  storageClass: "{{ DefaultStorageClassName }}"
+auth:
+  rootPassword: "u5IVyepQWs"
