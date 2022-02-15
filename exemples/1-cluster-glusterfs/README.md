@@ -4,7 +4,7 @@
 vagrant box update
 vagrant box prune --force
 for i in {0..4}; do ssh-keygen -f ~/.ssh/known_hosts -R "192.168.56.14${i}"; done
-ansible-galaxy install -r requirements.yml
+ansible-galaxy install -r requirements.yml --force
 ansible all -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
 ansible-playbook -i ./inventory playbook_install.yml
 ~~~
