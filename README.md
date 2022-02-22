@@ -5,7 +5,7 @@
 Windows VirtualBox
 
 ~~~powershell
-vagrant plugin update 
+vagrant plugin update
 vagrant up --provision --provider virtualbox
 vagrant destroy -f
 vagrant global-status
@@ -16,6 +16,7 @@ Linux libvirt
 ~~~bash
 vagrant plugin install vagrant-libvirt
 vagrant plugin install vagrant-mutate
+vagrant plugin update
 vagrant up --provision --provider=libvirt
 ~~~
 
@@ -24,9 +25,22 @@ Linux lxc
 ~~~bash
 sudo apt-get install lxc-utils lxc-templates
 vagrant plugin install vagrant-lxc
+vagrant plugin update
 vagrant up --provision --provider=lxc
 # ajouter lxc__bridge_name: 'vlxcbr1' dans Vagrantfile
 # node.vm.network "private_network", ip: "192.168.56.14#{i}"#, lxc__bridge_name: 'vlxcbr1'
+~~~
+
+~~~bash
+vagrant plugin install vagrant-lxd
+vagrant plugin update
+lxc config get core.https_address
+# vide alors faire
+lxc config set core.https_address 127.0.0.1
+lxc config trust add /home/$USER/.vagrant.d/data/lxd/client.crt
+
+vagrant up --provision --provider=lxd
+# lxc list --format json | jq -r '.[] | .state.network.eth0.addresses | .[] | select (.family == "inet") | .address'
 ~~~
 
 

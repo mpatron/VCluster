@@ -12,9 +12,9 @@ VM_RAM = "4096" # 1024 2048 3072 4096 8192
 VM_CPU = 2
 # VM
 # IMAGE = "ubuntu/focal64" #20.04 LTS
-IMAGE = "generic/ubuntu2004"
+# IMAGE = "generic/ubuntu2004"
 # LXC
-# IMAGE = "hibox/focal64"
+IMAGE = "hibox/focal64"
 
 Vagrant.configure("2") do |config|
   
