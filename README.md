@@ -20,16 +20,7 @@ vagrant plugin update
 vagrant up --provision --provider=libvirt
 ~~~
 
-Linux lxc
-
-~~~bash
-sudo apt-get install lxc-utils lxc-templates
-vagrant plugin install vagrant-lxc
-vagrant plugin update
-vagrant up --provision --provider=lxc
-# ajouter lxc__bridge_name: 'vlxcbr1' dans Vagrantfile
-# node.vm.network "private_network", ip: "192.168.56.14#{i}"#, lxc__bridge_name: 'vlxcbr1'
-~~~
+Linux lxd
 
 ~~~bash
 vagrant plugin install vagrant-lxd
