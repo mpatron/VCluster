@@ -28,8 +28,10 @@ clusterprovision()
     # echo "==> Running provisioner script"
     # cat bootstrap-kube.sh | lxc exec $node bash
     # echo
-    sleep 3
+    # sleep 3
+    echo "Starting $node..."
     lxc exec $node -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
+    echo "$node started."
     lxc exec $node -- sh -c "mkdir -p /home/ubuntu/.ssh"
     lxc exec $node -- sh -c "chmod 700 /home/ubuntu/.ssh"
     cat ~/.ssh/id_rsa.pub | lxc exec $node -- sh -c "cat >> /home/ubuntu/.ssh/authorized_keys"
