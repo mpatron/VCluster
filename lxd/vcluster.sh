@@ -1,4 +1,5 @@
 #!/bin/bash
+# set -x
 
 usage()
 {
@@ -11,7 +12,8 @@ if [ $# -ne 1 ] ; then
     exit 0
 fi
 
-NODES="node0 node1 node2 node3"
+# NODES="node0 node1 node2 node3"
+NODES="node0 node1"
 
 clusterprovision()
 {
@@ -26,10 +28,17 @@ clusterprovision()
     # echo "==> Running provisioner script"
     # cat bootstrap-kube.sh | lxc exec $node bash
     # echo
+    sleep 5
     lxc exec $node -- sh -c "mkdir -p /home/ubuntu/.ssh"
     lxc exec $node -- sh -c "chmod 700 /home/ubuntu/.ssh"
     cat ~/.ssh/id_rsa.pub | lxc exec $node -- sh -c "cat >> /home/ubuntu/.ssh/authorized_keys"
+    lxc exec $node -- sh -c "chown ubuntu:ubuntu -R /home/ubuntu"
+    lxc exec $node --  bash -c 'printf "ubuntu\nubuntu\n" | passwd ubuntu'
+    lxc exec $node --  bash -c "sed -i 's/#\?\(PasswordAuthentication\s*\).*$/\1 yes/' /etc/ssh/sshd_config"
+    lxc exec $node --  bash -c 'systemctl restart sshd.service'
   done
+  ssh-keygen -f ~/.ssh/known_hosts -R 10.215.104.127
+  ssh-keygen -f ~/.ssh/known_hosts -R 10.215.104.213
 }
 
 clusterdestroy()

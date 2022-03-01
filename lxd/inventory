@@ -1,0 +1,25 @@
+[all]
+node0  ansible_host=10.215.104.213
+node1  ansible_host=10.215.104.127
+
+[all:vars]
+ansible_user=ubuntu
+ansible_ssh_pass=ubuntu
+
+[k8s-master]
+node0
+[k8s-nodes]
+node0
+node1
+
+[gluster]
+node0
+node1
+
+[gluster:vars]
+ansible_user=ubuntu
+ansible_ssh_pass=ubuntu
+
+[k8s:children]
+k8s-master
+k8s-nodes
