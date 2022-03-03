@@ -1,8 +1,10 @@
 ---
 - hosts: all
-  connection: local
-  remote_user: root
+  # connection: local
+  # remote_user: root
   tasks:
   - name: Print debug message
     debug:
       msg: Hello, World!
+  - name: Ecriture du fichier /etc/hosts
+    template: src=hosts.j2 dest=/etc/hosts mode=644 owner=root group=root

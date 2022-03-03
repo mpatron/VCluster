@@ -11,4 +11,11 @@ ansible-galaxy collection install community.general
 # Véeification
 ansible-inventory --graph --vars
 ansible all -m raw -a "sudo hwclock --hctosys && date"
-ansible-playbook -i inventory -vvvv playbook.yml
+ansible-galaxy install -r requirements.yml --force
+
+ansible-playbook playbook.yml
+ansible-playbook ../exemples/1-cluster-glusterfs/playbook_install.yml
+ansible-playbook -i ../../lxd/lxd.yml playbook_install.yml
+
+## Debug
+ansible -i ../../lxd/lxd.yml node0 -m ansible.builtin.setup

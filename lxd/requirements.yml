@@ -1,0 +1,12 @@
+---
+roles:
+  - name: geerlingguy.swap
+  - name: geerlingguy.containerd
+  - name: geerlingguy.kubernetes
+  - name: geerlingguy.glusterfs
+  - name: geerlingguy.helm
+  - name: mpatron.ansible_role_nfs_ganesha_gluster
+
+collections:
+  - name: kubernetes.core
+  - name: ansible.posix
