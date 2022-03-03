@@ -25,6 +25,7 @@ clusterprovision()
   for node in $NODES
   do
     echo "==> Bringing up $node"
+    # lxc launch $IMAGE $node --profile node-profile --vm
     lxc launch $IMAGE $node --profile node-profile
     # sleep 10
     # echo "==> Running provisioner script"

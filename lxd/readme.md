@@ -13,9 +13,8 @@ ansible-inventory --graph --vars
 ansible all -m raw -a "sudo hwclock --hctosys && date"
 ansible-galaxy install -r requirements.yml --force
 
-ansible-playbook playbook.yml
-ansible-playbook ../exemples/1-cluster-glusterfs/playbook_install.yml
-ansible-playbook -i ../../lxd/lxd.yml playbook_install.yml
+cd ./lxd
+./vcluster.sh destroy && ./vcluster.sh provision && ansible-playbook playbook.yml && ansible-playbook ../exemples/1-cluster-glusterfs/playbook_install.yml && ansible-playbook ../exemples/2-cluster-kubernetes/playbook_install.yml
 
 ## Debug
-ansible -i ../../lxd/lxd.yml node0 -m ansible.builtin.setup
+ansible node0 -m ansible.builtin.setup
