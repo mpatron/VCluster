@@ -12,10 +12,10 @@ VM_RAM = "4096" # 1024 2048 3072 4096 8192
 VM_CPU = 2
 # VM
 # IMAGE = "ubuntu/focal64" #20.04 LTS
-# IMAGE = "generic/ubuntu2004"
+IMAGE = "generic/ubuntu2004"
 # LXC
 # IMAGE = "hibox/focal64"
-IMAGE = "ubuntu/focal/cloud"
+# IMAGE = "ubuntu/focal/cloud"
 
 Vagrant.configure("2") do |config|
   
@@ -55,20 +55,6 @@ Vagrant.configure("2") do |config|
    vb.nested = true
    vb.memory = VM_RAM
   end
-  config.vm.provider :lxd do |vb|
-    vb.api_endpoint = 'https://127.0.0.1:8443'
-    vb.timeout = 10
-    vb.name = nil
-    vb.nesting = nil
-    vb.privileged = nil
-    vb.ephemeral = false
-    vb.profiles = ['default']
-    vb.environment = {}
-    vb.config = {}
-  end
-  config.vm.provider :lxc do |vb|
-    vb.customize 'cgroup.memory.limit_in_bytes', '4096M'
-  end
   config.vm.boot_timeout = 600 # default=300s
   # config.ssh.insert_key = false
 
@@ -76,11 +62,11 @@ Vagrant.configure("2") do |config|
     config.vm.define "node#{i}" do |node|
       node.vm.hostname = "node#{i}.jobjects.net"
       node.vm.network "private_network", ip: "192.168.56.14#{i}"#, lxc__bridge_name: 'vlxcbr1'
-#       node.vm.provision "shell", run: "always", inline: <<-SHELL1
-# sudo sed -i -e "\\#PasswordAuthentication no# s#PasswordAuthentication no#PasswordAuthentication yes#g" /etc/ssh/sshd_config
-# sudo systemctl restart sshd
-# sudo apt-get update -y && sudo apt-get install sshpass -y
-# SHELL1
+      node.vm.provision "shell", run: "always", inline: <<-SHELL1
+sudo sed -i -e "\\#PasswordAuthentication no# s#PasswordAuthentication no#PasswordAuthentication yes#g" /etc/ssh/sshd_config
+sudo systemctl restart sshd
+sudo apt-get update -y && sudo apt-get install sshpass -y
+SHELL1
     end
   end
 
@@ -88,13 +74,13 @@ Vagrant.configure("2") do |config|
     machine.vm.hostname = "node0.jobjects.net"
     machine.vm.network "private_network", ip: "192.168.56.140"#, lxc__bridge_name: 'vlxcbr1'
     # Workaround, sous windows /vagrant/ansible.cfg est r/w et il faut que ansible.cfg soit ro
-#     machine.vm.provision "shell", run: "always", inline: <<-SHELL0
-# sudo sed -i -e "\\#PasswordAuthentication no# s#PasswordAuthentication no#PasswordAuthentication yes#g" /etc/ssh/sshd_config
-# sudo systemctl restart sshd
-# sudo mkdir -p /etc/ansible && sudo cat /vagrant/ansible.cfg > /etc/ansible/ansible.cfg
-# sudo sh -c 'cat /vagrant/inventory > /etc/ansible/hosts'
-# sudo apt-get update -y && sudo apt-get install sshpass -y
-# SHELL0
+    machine.vm.provision "shell", run: "always", inline: <<-SHELL0
+sudo sed -i -e "\\#PasswordAuthentication no# s#PasswordAuthentication no#PasswordAuthentication yes#g" /etc/ssh/sshd_config
+sudo systemctl restart sshd
+sudo mkdir -p /etc/ansible && sudo cat /vagrant/ansible.cfg > /etc/ansible/ansible.cfg
+sudo sh -c 'cat /vagrant/inventory > /etc/ansible/hosts'
+sudo apt-get update -y && sudo apt-get install sshpass -y
+SHELL0
 
 #    machine.vm.provision "shell", inline: "sudo mkdir -p /etc/ansible && sudo cat /vagrant/ansible.cfg > /etc/ansible/ansible.cfg", run: "always"
 #    machine.vm.provision "shell", inline: "sudo sh -c 'cat /vagrant/inventory > /etc/ansible/hosts'", run: "always"

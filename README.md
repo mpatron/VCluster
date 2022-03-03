@@ -23,15 +23,8 @@ vagrant up --provision --provider=libvirt
 Linux lxd
 
 ~~~bash
-vagrant plugin install vagrant-lxd
-vagrant plugin update
-lxc config get core.https_address
-# vide alors faire
-lxc config set core.https_address 127.0.0.1
-lxc config trust add /home/$USER/.vagrant.d/data/lxd/client.crt
-
-vagrant up --provision --provider=lxd
-# lxc list --format json | jq -r '.[] | .state.network.eth0.addresses | .[] | select (.family == "inet") | .address'
+cd lxd
+./vcluster provision
 ~~~
 
 
