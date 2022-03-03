@@ -1,6 +1,8 @@
 #!/bin/bash
 # set -x
 
+IMAGE="ubuntu:20.04"
+
 usage()
 {
   echo "Usage: $(basename $0) [provision|destroy]"
@@ -23,13 +25,13 @@ clusterprovision()
   for node in $NODES
   do
     echo "==> Bringing up $node"
-    lxc launch ubuntu:20.04 $node --profile node-profile
+    lxc launch $IMAGE $node --profile node-profile
     # sleep 10
     # echo "==> Running provisioner script"
     # cat bootstrap-kube.sh | lxc exec $node bash
     # echo
     # sleep 3
-    echo "Starting $node..."
+    echo "Waiting starting $node..."
     lxc exec $node -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
     echo "$node started."
     lxc exec $node -- sh -c "mkdir -p /home/ubuntu/.ssh"
@@ -40,8 +42,11 @@ clusterprovision()
     lxc exec $node --  bash -c "sed -i 's/#\?\(PasswordAuthentication\s*\).*$/\1 yes/' /etc/ssh/sshd_config"
     lxc exec $node --  bash -c 'systemctl restart sshd.service'
   done
-  ssh-keygen -f ~/.ssh/known_hosts -R 10.215.104.127
-  ssh-keygen -f ~/.ssh/known_hosts -R 10.215.104.213
+  
+  NODES_IP=$(lxc list --format json | jq -r '.[] | .state.network.eth0.addresses | .[] | select (.family == "inet") | (.address)')
+  for NODE_IP in $NODES_IP; do
+    ssh-keygen -f ~/.ssh/known_hosts -R $NODE_IP
+  done
 }
 
 clusterdestroy()
