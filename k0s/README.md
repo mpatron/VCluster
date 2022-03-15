@@ -151,7 +151,10 @@ ansible-playbook -i ./inventory playbook_generate_rsa.yml
 ~~~bash
 k0sctl init > k0sctl.yaml
 k0sctl apply --config k0sctl.yaml
+k0sctl kubeconfig > ~/.kube/config
+watch kubectl get pods -A
 
+k0sctl reset --config k0sctl.yaml
 ~~~
 
 

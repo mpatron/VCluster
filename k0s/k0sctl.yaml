@@ -5,29 +5,40 @@ metadata:
   name: k0s-cluster
 spec:
   hosts:
-  - ssh:
+  - role: controller
+    privateAddress: 192.168.56.140
+    privateInterface: eth1
+    ssh:
       address: 192.168.56.140
       user: vagrant
       port: 22
-      keyPath: /home/vagrant/.ssh/id_ssh_rsa_k0s
-    role: controller
-  - ssh:
+      keyPath: /home/vagrant/.ssh/id_ssh_rsa_k0s    
+  - role: worker
+    privateAddress: 192.168.56.141
+    privateInterface: eth1
+    ssh:
       address: 192.168.56.141
+      # privateInterface: eth1
       user: vagrant
       port: 22
-      keyPath: /home/vagrant/.ssh/id_ssh_rsa_k0s
-    role: worker
-  - ssh:
+      keyPath: /home/vagrant/.ssh/id_ssh_rsa_k0s    
+  - role: worker
+    privateAddress: 192.168.56.142
+    privateInterface: eth1
+    ssh:
       address: 192.168.56.142
+      # privateInterface: eth1
       user: vagrant
       port: 22
       keyPath: /home/vagrant/.ssh/id_ssh_rsa_k0s
-    role: worker
-  - ssh:
+  - role: worker
+    privateAddress: 192.168.56.143
+    privateInterface: eth1
+    ssh:
       address: 192.168.56.143
+      # privateInterface: eth1
       user: vagrant
       port: 22
       keyPath: /home/vagrant/.ssh/id_ssh_rsa_k0s
-    role: worker
   k0s:
     version: 1.23.3+k0s.1
