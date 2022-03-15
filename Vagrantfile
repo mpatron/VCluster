@@ -40,7 +40,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = IMAGE
   config.vm.box_check_update = false
-  config.vm.synced_folder ".", "/vagrant" #, type: "virtualbox"
+  # config.vm.synced_folder ".", "/vagrant"
+  # config.vm.synced_folder ".", "/vagrant" , type: "virtualbox"
+  config.vm.synced_folder ".", "/vagrant", type: "nfs", mount_options: ["vers=3,tcp"]
   config.vm.provider :virtualbox do |vb|
     vb.cpus = VM_CPU
     vb.nested = true

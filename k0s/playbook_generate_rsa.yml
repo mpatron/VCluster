@@ -1,0 +1,40 @@
+---
+- hosts: node0
+  become: no
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: Generate an OpenSSH keypair with the default values (4096 bits, rsa)
+      community.crypto.openssh_keypair:
+        path: "{{ ssh_key_filename }}"
+
+- hosts: all
+  become: yes
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: Deploy SSH Key
+      authorized_key: 
+        user: vagrant
+        key: "{{ lookup('file', '{{ ssh_key_filename }}.pub') }}"
+        state: present
+    - name: Create a directory ~/.kube for vagrant if it does not exist
+      ansible.builtin.file:
+        path: /home/vagrant/.ssh
+        state: directory
+        owner: vagrant
+        group: vagrant
+        mode: '0700'
+    - name: Copy a RSA Key pair "{{ ssh_key_filename }}(.pub)" file from vagrant (node0) to vagrant user (all node)
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        remote_src: no
+        owner: vagrant
+        group: vagrant
+        mode: '0600'
+        backup: yes
+      when: "'node0' not in ansible_hostname"
+      with_items:
+        - { src: '{{ ssh_key_filename }}.pub', dest: '{{ ssh_key_filename }}.pub' }
+        - { src: '{{ ssh_key_filename }}', dest: '{{ ssh_key_filename }}' }

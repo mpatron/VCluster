@@ -1,0 +1,33 @@
+---
+apiVersion: k0sctl.k0sproject.io/v1beta1
+kind: Cluster
+metadata:
+  name: k0s-cluster
+spec:
+  hosts:
+  - ssh:
+      address: 192.168.56.140
+      user: vagrant
+      port: 22
+      keyPath: /home/vagrant/.ssh/id_ssh_rsa_k0s
+    role: controller
+  - ssh:
+      address: 192.168.56.141
+      user: vagrant
+      port: 22
+      keyPath: /home/vagrant/.ssh/id_ssh_rsa_k0s
+    role: worker
+  - ssh:
+      address: 192.168.56.142
+      user: vagrant
+      port: 22
+      keyPath: /home/vagrant/.ssh/id_ssh_rsa_k0s
+    role: worker
+  - ssh:
+      address: 192.168.56.143
+      user: vagrant
+      port: 22
+      keyPath: /home/vagrant/.ssh/id_ssh_rsa_k0s
+    role: worker
+  k0s:
+    version: 1.23.3+k0s.1
