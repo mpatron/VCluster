@@ -112,7 +112,86 @@ kube-system   coredns-6d9f49dcbb-qsjhb          1/1     Running             0   
 
 Voilà, c'est fini, kubernetes fonctionne en standalone.
 
-## Dashboard de traefik
+## Installation de k0s en cluster
+
+Mise en place de la clef rsa, se connecter au node (vagrant ssh node0) puis
+
+~~~bash
+cd /vagrant/k0s
+for i in {0..4}; do ssh-keygen -f ~/.ssh/known_hosts -R "192.168.56.14${i}"; done
+ansible-galaxy install -r requirements.yml --force
+## ansible-galaxy collection install -r requirements.yml --force
+## ansible-galaxy role install -r requirements.yml --force
+ansible all -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
+ansible-playbook -i ./inventory playbook_generate_rsa.yml
+~~~
+
+~~~bash
+cd ~
+
+# ============ Attention ============
+# Il semble qu'il y ait un bug avec le DNS client systemd-resolved alors on le déactive
+# Il empêche le téléchargement des pod system de kubernetes par abssence de résolution DNS
+ansible all -i ./inventory -m raw -a "sudo systemctl stop systemd-resolved && sudo systemctl disable systemd-resolved"
+# ===================================
+
+# k0sctl init > k0sctl.yaml
+# Prendre le k0sctl.yml déjà fourni
+k0sctl apply --config k0sctl.yaml
+k0sctl kubeconfig > ~/.kube/config
+watch kubectl get pods -A
+
+# Pour tous supprimer
+# k0sctl reset --config k0sctl.yaml
+~~~
+
+Voilà, c'est fini, kubernetes fonctionne en cluster.
+
+## Installing Traefik and MetalLB
+
+### Metallb
+
+~~~bash
+helm repo add metallb https://metallb.github.io/metallb
+helm repo update
+helm install --namespace metallb-system --create-namespace metallb metallb/metallb
+~~~
+
+~~~bash
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - 192.168.121.110-192.168.121.120
+EOF
+~~~
+
+Test de mettallb, pas la peine d'aller plus loin si ça ne fonctionne pas.
+
+~~~bash
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/tutorial-2.yaml
+kubectl get services
+curl http://192.168.56.230
+kubectl delete -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/tutorial-2.yaml
+~~~
+
+### Traefik
+
+~~~bash
+helm repo add traefik https://helm.traefik.io/traefik
+helm repo update
+helm install traefik traefik/traefik --set service.type=LoadBalancer
+~~~
+
+### Dashboard de traefik
 
 Ajout du dashboard de traefik avec un fichier de configuration fourni : traefik-dashboard.yaml
 
@@ -135,58 +214,5 @@ NAME     STATUS   ROLES           AGE   VERSION
 mykube   Ready    control-plane   41m   v1.23.3+k0s
 ~~~
 
-## Installation de k0s en cluster
-
-Mise en place de la clef rsa
-
-~~~bash
-for i in {0..4}; do ssh-keygen -f ~/.ssh/known_hosts -R "192.168.56.14${i}"; done
-ansible-galaxy install -r requirements.yml --force
-## ansible-galaxy collection install -r requirements.yml --force
-## ansible-galaxy role install -r requirements.yml --force
-ansible all -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
-ansible-playbook -i ./inventory playbook_generate_rsa.yml
-~~~
-
-~~~bash
-k0sctl init > k0sctl.yaml
-k0sctl apply --config k0sctl.yaml
-k0sctl kubeconfig > ~/.kube/config
-watch kubectl get pods -A
-
-k0sctl reset --config k0sctl.yaml
-~~~
-
-
-## Installing Traefik and MetalLB
-
-~~~bash
-
-# Metallb
-helm repo add metallb https://metallb.github.io/metallb
-helm repo update
-helm install --namespace metallb-system --create-namespace metallb metallb/metallb
-~~~bash
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  namespace: metallb-system
-  name: config
-data:
-  config: |
-    address-pools:
-    - name: default
-      protocol: layer2
-      addresses:
-      - 192.168.122.110-192.168.122.120
-EOF
-~~~
-
-# Traefik
-helm repo add traefik https://helm.traefik.io/traefik
-helm repo update
-helm install traefik traefik/traefik --set service.type=LoadBalancer
-~~~
 
 https://traefik.io/blog/from-zero-to-hero-getting-started-with-k0s-and-traefik/
