@@ -5,6 +5,7 @@
 Windows VirtualBox
 
 ~~~powershell
+vagrant box update
 vagrant plugin update
 vagrant up --provision --provider virtualbox
 vagrant destroy -f
@@ -14,6 +15,7 @@ vagrant global-status
 Linux libvirt
 
 ~~~bash
+vagrant box update
 vagrant plugin install vagrant-libvirt
 vagrant plugin install vagrant-mutate
 vagrant plugin update
@@ -55,3 +57,4 @@ systemctl daemon-reload && systemctl status kubelet
 - [Installation de GlusterFS](exemples/1-cluster-glusterfs/README.md)
 - [Installation de Kubernetes](exemples/2-cluster-kubernetes/README.md)
 - [Installation des volumes GlusterFS et NFS dans kubernetes](exemples/3-gluster-volume/README.md)
+- [https://docs.ceph.com/projects/ceph-ansible/en/latest/](https://docs.ceph.com/projects/ceph-ansible/en/latest/)
