@@ -3,6 +3,7 @@ lxc list --format json | jq -r '.[] | .state.network.eth0.addresses | .[] | sele
 https://medium.com/linuxstories/vagrant-create-a-multi-machine-environment-b90738383a7e
 lxc image list images: | grep -i ubuntu | grep x86_64 | grep focal
 
+https://medium.com/geekculture/a-step-by-step-demo-on-kubernetes-cluster-creation-f183823c0411
 
 
 # Pour Avoir community.general.lxd
