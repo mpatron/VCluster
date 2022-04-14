@@ -9,7 +9,7 @@ https://medium.com/geekculture/a-step-by-step-demo-on-kubernetes-cluster-creatio
 # Pour Avoir community.general.lxd
 ansible-galaxy collection install community.general
 
-# Véeification
+# Vérification
 ansible-inventory --graph --vars
 ansible all -m raw -a "sudo hwclock --hctosys && date"
 ansible-galaxy install -r requirements.yml --force
@@ -19,3 +19,6 @@ cd ./lxd
 
 ## Debug
 ansible node0 -m ansible.builtin.setup
+
+## Shelll
+lxc exec node0 -- bash

@@ -15,7 +15,8 @@ if [ $# -ne 1 ] ; then
 fi
 
 # NODES="node0 node1 node2 node3"
-NODES="node0 node1"
+# NODES="node0 node1"
+NODES="kmaster0 worker1 worker2"
 
 clusterprovision()
 {
@@ -27,11 +28,11 @@ clusterprovision()
     echo "==> Bringing up $node"
     # lxc launch $IMAGE $node --profile node-profile --vm
     lxc launch $IMAGE $node --profile node-profile
-    # sleep 10
+    sleep 10
     # echo "==> Running provisioner script"
-    # cat bootstrap-kube.sh | lxc exec $node bash
-    # echo
-    # sleep 3
+    cat bootstrap-kube.sh | lxc exec $node bash
+    echo
+    sleep 3
     echo "Waiting starting $node..."
     lxc exec $node -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
     echo "$node started."
