@@ -8,8 +8,8 @@
 
 # ENV["LC_ALL"] = "fr_FR.UTF-8"
 VM_COUNT = 3
-VM_RAM = "4096" # 1024 2048 3072 4096 8192
-VM_CPU = 2
+VM_RAM = "6144" # 1024 2048 3072 4096 6144 8192
+VM_CPU = 4
 # VM
 # IMAGE = "ubuntu/focal64" #20.04 LTS
 IMAGE = "generic/ubuntu2004"
@@ -40,9 +40,11 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = IMAGE
   config.vm.box_check_update = false
+  config.vm.boot_timeout = 600 # default=300s
+  # config.ssh.insert_key = false
   # config.vm.synced_folder ".", "/vagrant"
-  # config.vm.synced_folder ".", "/vagrant" , type: "virtualbox"
-  config.vm.synced_folder ".", "/vagrant", type: "nfs", mount_options: ["vers=3,tcp"]
+  # config.vm.synced_folder ".", "/vagrant" , type: "virtualbox"  
+  config.vm.synced_folder ".", "/vagrant", type: "nfs", mount_options: ["vers=3,tcp"]  
   config.vm.provider :virtualbox do |vb|
     vb.cpus = VM_CPU
     vb.nested = true
@@ -52,29 +54,30 @@ Vagrant.configure("2") do |config|
     vb.customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']
     vb.linked_clone = true
   end
-  config.vm.provider :libvirt do |vb|
-   vb.cpus = VM_CPU
-   vb.nested = true
-   vb.memory = VM_RAM
+  config.vm.provider :libvirt do |lbv|
+    lbv.cpus = VM_CPU
+    lbv.nested = true
+    lbv.memory = VM_RAM
+    lbv.storage :file, :type => 'qcow2', :size => "20G"
   end
-  config.vm.boot_timeout = 600 # default=300s
-  # config.ssh.insert_key = false
 
   (1..VM_COUNT).each do |i|
     config.vm.define "node#{i}" do |node|
       node.vm.hostname = "node#{i}.jobjects.net"
-      node.vm.network "private_network", ip: "192.168.56.14#{i}"#, lxc__bridge_name: 'vlxcbr1'
+      node.vm.network :private_network, ip: "192.168.56.14#{i}"
       node.vm.provision "shell", run: "always", inline: <<-SHELL1
 sudo sed -i -e "\\#PasswordAuthentication no# s#PasswordAuthentication no#PasswordAuthentication yes#g" /etc/ssh/sshd_config
 sudo systemctl restart sshd
 sudo apt-get update -y && sudo apt-get install sshpass -y
+sudo swapoff -a
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
 SHELL1
     end
   end
 
   config.vm.define 'node0' do |machine|
     machine.vm.hostname = "node0.jobjects.net"
-    machine.vm.network "private_network", ip: "192.168.56.140"#, lxc__bridge_name: 'vlxcbr1'
+    machine.vm.network :private_network, ip: "192.168.56.140"
     # Workaround, sous windows /vagrant/ansible.cfg est r/w et il faut que ansible.cfg soit ro
     machine.vm.provision "shell", run: "always", inline: <<-SHELL0
 sudo sed -i -e "\\#PasswordAuthentication no# s#PasswordAuthentication no#PasswordAuthentication yes#g" /etc/ssh/sshd_config
@@ -82,11 +85,9 @@ sudo systemctl restart sshd
 sudo mkdir -p /etc/ansible && sudo cat /vagrant/ansible.cfg > /etc/ansible/ansible.cfg
 sudo sh -c 'cat /vagrant/inventory > /etc/ansible/hosts'
 sudo apt-get update -y && sudo apt-get install sshpass -y
+sudo swapoff -a
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
 SHELL0
-
-#    machine.vm.provision "shell", inline: "sudo mkdir -p /etc/ansible && sudo cat /vagrant/ansible.cfg > /etc/ansible/ansible.cfg", run: "always"
-#    machine.vm.provision "shell", inline: "sudo sh -c 'cat /vagrant/inventory > /etc/ansible/hosts'", run: "always"
-#    machine.vm.provision "shell", inline: "sudo apt-get update -y && sudo apt-get install sshpass -y", run: "always"
     machine.vm.provision :ansible_local do |ansible|
       ansible.playbook       = "provision.yml"
       ansible.verbose        = true

@@ -233,3 +233,10 @@ parameters:
   server: nfs-server.example.com
   path: /share
   readOnly: "false"
+
+
+## Rook-Ceph
+vagrant box add centos/7 --provider=libvirt
+
+- [https://rook.io/docs/rook/v1.9/quickstart.html](https://rook.io/docs/rook/v1.9/quickstart.html)
+- [https://rook.io/docs/rook/v1.9/ceph-toolbox.html](https://rook.io/docs/rook/v1.9/ceph-toolbox.html)
