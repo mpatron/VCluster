@@ -38,6 +38,9 @@ Visialisation de l'inventory sur le node0
 cat /etc/ansible/hosts | grep -v '^\s*$\|^\s*\#'
 for i in {0..4}; do ssh-keygen -f ~/.ssh/known_hosts -R "192.168.56.14${i}"; done
 for i in {0..4}; do ssh-keygen -f ~/.ssh/known_hosts -R "node${i}"; done
+ansible all -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
+ansible-galaxy install -r requirements.yml --force
+ansible-playbook -i ./inventory provision.yml
 ~~~
 
 Exécuter une commande sur tous les noeux à partir du node0
