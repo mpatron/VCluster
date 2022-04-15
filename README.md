@@ -52,8 +52,25 @@ ansible all -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
 
 ## Kubernetes status
 
+~~~bash
+# Dans un noeud
 systemctl daemon-reload && systemctl status kubelet
 
+# Sur un le code VCluster
+cd exemples/2-cluster-kubernetes/
+ansible-playbook -i ./inventory playbook_install.yml 
+ansible-playbook -i ./inventory playbook_install_console_tools.yml 
+
+git clone --single-branch --branch v1.9.0 https://github.com/rook/rook.git
+cd ~/rook/deploy/examples
+kubectl create -f crds.yaml -f common.yaml -f operator.yaml
+kubectl create -f cluster.yaml
+kubectl -n rook-ceph rollout status deploy/rook-ceph-tools
+# Puis
+kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- bash
+# Et Faire
+ceph status
+~~~
 
 # See documentation:
 
