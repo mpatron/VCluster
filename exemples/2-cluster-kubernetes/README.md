@@ -183,9 +183,8 @@ root@node0:~# kubeadm upgrade apply v1.21.8
 ...
 # sur chaque worker :
 KVERSION=1.21.8-00
-sudo apt-mark unhold kubeadm kubelet kubectl && sudo apt-get update && sudo apt-get install -y kubeadm=${KVERSION} kubelet=${KVERSION} kubectl=${KVERSION} && sudo apt-mark hold kubeadm kubelet kubectl
-sudo kubeadm upgrade node
-sudo systemctl restart kubelet
+sudo apt-mark unhold kubeadm kubelet kubectl && sudo apt-get update && sudo apt-get install -y kubeadm=${KVERSION} kubelet=${KVERSION} kubectl=${KVERSION} && sudo apt-mark hold kubeadm kubelet kubectl && sudo apt autoremove --purge -y
+sudo kubeadm upgrade node && sudo systemctl restart kubelet
 ~~~
 
 ## Components

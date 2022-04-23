@@ -78,3 +78,4 @@ ceph status
 - [Installation de Kubernetes](exemples/2-cluster-kubernetes/README.md)
 - [Installation des volumes GlusterFS et NFS dans kubernetes](exemples/3-gluster-volume/README.md)
 - [https://docs.ceph.com/projects/ceph-ansible/en/latest/](https://docs.ceph.com/projects/ceph-ansible/en/latest/)
+- [https://ubuntu.com/blog/kvm-hyphervisor](https://ubuntu.com/blog/kvm-hyphervisor)
