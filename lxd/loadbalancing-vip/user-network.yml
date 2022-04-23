@@ -1,0 +1,13 @@
+version: 1
+config:
+  - type: physical
+    name: eth1
+    subnets:
+      - type: static
+        ipv4: true
+        address: 192.168.1.101/24
+        netmask: 255.255.255.0
+        gateway: 192.168.1.1 // ends often with .1
+        control: auto
+  - type: nameserver
+    address: 8.8.8.8       // for example

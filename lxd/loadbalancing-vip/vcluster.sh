@@ -23,7 +23,7 @@ clusterprovision()
   echo
   for node in $NODES
   do
-    echo "==> Bringing up $node"
+    echo "==> [Provisionning] Bringing up $node"
     # lxc launch $IMAGE $node --profile double-network-config --vm
     lxc launch $IMAGE $node --profile double-network-config
     sleep 10
@@ -34,6 +34,14 @@ clusterprovision()
     echo "Waiting starting $node..."
     lxc exec $node -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
     echo "$node started."
+
+
+    echo "==> [Provisionning] Network config on eth1  $node"
+    lxc config device override $node eth1 ipv4.address=192.168.1.150/24
+    lxc config device set c1 eth0 ipv4.address
+    lxc config device override mytoto eth1 ipv4.address=192.168.1.150/24
+lxc config device set mytoto eth1 ipv4.address=192.168.1.150/24
+
     lxc exec $node -- sh -c "mkdir -p /home/ubuntu/.ssh"
     lxc exec $node -- sh -c "chmod 700 /home/ubuntu/.ssh"
     cat ~/.ssh/id_rsa.pub | lxc exec $node -- sh -c "cat >> /home/ubuntu/.ssh/authorized_keys"
