@@ -60,14 +60,16 @@ To access Alertmanager from outside the cluster execute the following commands:
     kubectl port-forward --namespace monitoring svc/prometheus-kube-prometheus-alertmanager 9093:9093
 ~~~~
 
+~~~bash
 # https://github.com/bitnami/charts/tree/master/bitnami/grafana/#installing-the-chart
 helm install grafana -n monitoring --set service.type=LoadBalancer bitnami/grafana
 export GRAFANA_IP=$(kubectl get svc --namespace monitoring grafana -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo http://$GRAFANA_IP:3000
 echo "User: admin"
 echo "Password: $(kubectl get secret grafana-admin --namespace monitoring -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 --decode)"
+~~~
 
-~~~~~
+~~~bash
 vagrant@node0:~$ helm install grafana -n monitoring --set service.type=LoadBalancer --set persistence.storageClass=nfs-client bitnami/grafana
 NAME: grafana
 LAST DEPLOYED: Mon Jan 24 21:46:55 2022
@@ -92,7 +94,9 @@ APP VERSION: 8.3.4
 
     echo "User: admin"
     echo "Password: $(kubectl get secret grafana-admin --namespace monitoring -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 --decode)"
-~~~~
+~~~
+
+~~~bash
 https://grafana.com/api/dashboards/7249/revisions/1/download
 
 
