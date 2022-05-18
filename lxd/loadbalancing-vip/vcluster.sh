@@ -19,13 +19,18 @@ NODES="ha0 ha1 node0 node1"
 clusterprovision()
 {
   # check if we have double-network-config profile or create one
-  lxc profile list | grep -qo double-network-config || (lxc profile create double-network-config && cat double-network-config.yml | lxc profile edit double-network-config)
+  for ipnumber in {101..104}
+  do
+    lxc profile list | grep -qo double-network-config-$ipnumber || (lxc profile create double-network-config-$ipnumber && cat double-network-config-$ipnumber.yml | lxc profile edit double-network-config-$ipnumber)
+  done
   echo
+  ipnumber=101
   for node in $NODES
   do
     echo "==> [Provisionning] Bringing up $node"
     # lxc launch $IMAGE $node --profile double-network-config --vm
-    lxc launch $IMAGE $node --profile double-network-config
+    lxc launch $IMAGE $node --profile double-network-config-$ipnumber
+    ipnumber=$(($ipnumber+1))
     sleep 10
     # echo "==> Running provisioner script"
     cat instance-config.sh | lxc exec $node bash
@@ -34,13 +39,6 @@ clusterprovision()
     echo "Waiting starting $node..."
     lxc exec $node -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
     echo "$node started."
-
-
-    echo "==> [Provisionning] Network config on eth1  $node"
-    lxc config device override $node eth1 ipv4.address=192.168.1.150/24
-    lxc config device set c1 eth0 ipv4.address
-    lxc config device override mytoto eth1 ipv4.address=192.168.1.150/24
-lxc config device set mytoto eth1 ipv4.address=192.168.1.150/24
 
     lxc exec $node -- sh -c "mkdir -p /home/ubuntu/.ssh"
     lxc exec $node -- sh -c "chmod 700 /home/ubuntu/.ssh"

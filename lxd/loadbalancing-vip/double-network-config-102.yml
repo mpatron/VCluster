@@ -1,0 +1,35 @@
+config:
+  user.network-config: |
+    version: 1
+    config:
+      - type: physical
+        name: eth0
+        subnets:
+          - type: dhcp
+            ipv4: true
+      - type: physical
+        name: eth1
+        subnets:
+          - type: static
+            ipv4: true
+            address: 192.168.1.102/24
+            netmask: 255.255.255.0
+            gateway: 192.168.1.1
+            control: auto
+description: Default LXD profile
+devices:
+  eth0:
+    name: eth0
+    network: lxdbr0
+    type: nic
+  eth1:
+    name: eth1
+    nictype: macvlan
+    parent: eno1
+    type: nic
+  root:
+    path: /
+    pool: default
+    type: disk
+name: double-network-config
+used_by: []

@@ -5,4 +5,4 @@
 
 echo "[TASK 1] Install  runtime"
 apt update -qq >/dev/null 2>&1
-apt install -qq -y containerd ca-certificates apt-transport-https curl gnupg lsb-release software-properties-common >/dev/null 2>&1
+apt install -qq -y ca-certificates apt-transport-https curl gnupg lsb-release software-properties-common >/dev/null 2>&1
