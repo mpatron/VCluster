@@ -53,6 +53,9 @@ clusterprovision()
   for NODE_IP in $NODES_IP; do
     ssh-keygen -f ~/.ssh/known_hosts -R $NODE_IP
   done
+  for ipnumber in {101..104}; do
+    ssh-keygen -f ~/.ssh/known_hosts -R 192.168.88.$ipnumber
+  done
 
   for NODE in $NODES; do
     lxc stop $NODE
