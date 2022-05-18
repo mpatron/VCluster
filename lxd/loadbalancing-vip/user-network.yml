@@ -1,13 +1,30 @@
-version: 1
+### This is a YAML representation of the network.
+### Any line starting with a '# will be ignored.
+###
+### A network consists of a set of configuration items.
+###
+### An example would look like:
+### name: lxdbr0
+### config:
+###   ipv4.address: 10.62.42.1/24
+###   ipv4.nat: true
+###   ipv6.address: fd00:56ad:9f7a:9800::1/64
+###   ipv6.nat: true
+### managed: true
+### type: bridge
+###
+### Note that only the configuration can be changed.
+
 config:
-  - type: physical
-    name: eth1
-    subnets:
-      - type: static
-        ipv4: true
-        address: 192.168.1.101/24
-        netmask: 255.255.255.0
-        gateway: 192.168.1.1 // ends often with .1
-        control: auto
-  - type: nameserver
-    address: 8.8.8.8       // for example
+  ipv4.address: 192.168.88.1/24
+  ipv4.nat: "true"
+  ipv6.address: fd42:207:2791:3f73::1/64
+  ipv6.nat: "true"
+description: ""
+name: lxdbr1
+type: bridge
+used_by: []
+managed: true
+status: Created
+locations:
+- none

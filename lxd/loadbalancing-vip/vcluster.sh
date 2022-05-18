@@ -14,7 +14,7 @@ if [ $# -ne 1 ] ; then
     exit 0
 fi
 
-NODES="ha0 ha1 node0 node1"
+NODES="node0 node1 node2 node3"
 
 clusterprovision()
 {
@@ -25,43 +25,54 @@ clusterprovision()
   done
   echo
   ipnumber=101
-  for node in $NODES
+  for NODE in $NODES
   do
-    echo "==> [Provisionning] Bringing up $node"
-    # lxc launch $IMAGE $node --profile double-network-config --vm
-    lxc launch $IMAGE $node --profile double-network-config-$ipnumber
+    echo "==> [Provisionning] Bringing up $NODE"
+    # lxc launch $IMAGE $NODE --profile double-network-config --vm
+    lxc launch $IMAGE $NODE --profile double-network-config-$ipnumber
     ipnumber=$(($ipnumber+1))
     sleep 10
     # echo "==> Running provisioner script"
-    cat instance-config.sh | lxc exec $node bash
+    cat instance-config.sh | lxc exec $NODE bash
     echo
     sleep 3
-    echo "Waiting starting $node..."
-    lxc exec $node -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
-    echo "$node started."
+    echo "Waiting starting $NODE..."
+    lxc exec $NODE -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
+    echo "$NODE started."
 
-    lxc exec $node -- sh -c "mkdir -p /home/ubuntu/.ssh"
-    lxc exec $node -- sh -c "chmod 700 /home/ubuntu/.ssh"
-    cat ~/.ssh/id_rsa.pub | lxc exec $node -- sh -c "cat >> /home/ubuntu/.ssh/authorized_keys"
-    lxc exec $node -- sh -c "chown ubuntu:ubuntu -R /home/ubuntu"
-    lxc exec $node --  bash -c 'printf "ubuntu\nubuntu\n" | passwd ubuntu'
-    lxc exec $node --  bash -c "sed -i 's/#\?\(PasswordAuthentication\s*\).*$/\1 yes/' /etc/ssh/sshd_config"
-    lxc exec $node --  bash -c 'systemctl restart sshd.service'
+    lxc exec $NODE -- sh -c "mkdir -p /home/ubuntu/.ssh"
+    lxc exec $NODE -- sh -c "chmod 700 /home/ubuntu/.ssh"
+    cat ~/.ssh/id_rsa.pub | lxc exec $NODE -- sh -c "cat >> /home/ubuntu/.ssh/authorized_keys"
+    lxc exec $NODE -- sh -c "chown ubuntu:ubuntu -R /home/ubuntu"
+    lxc exec $NODE --  bash -c 'printf "ubuntu\nubuntu\n" | passwd ubuntu'
+    lxc exec $NODE --  bash -c "sed -i 's/#\?\(PasswordAuthentication\s*\).*$/\1 yes/' /etc/ssh/sshd_config"
+    lxc exec $NODE --  bash -c 'systemctl restart sshd.service'
   done
   
   NODES_IP=$(lxc list --format json | jq -r '.[] | .state.network.eth0.addresses | .[] | select (.family == "inet") | (.address)')
   for NODE_IP in $NODES_IP; do
     ssh-keygen -f ~/.ssh/known_hosts -R $NODE_IP
   done
+
+  for NODE in $NODES; do
+    lxc stop $NODE
+    lxc network attach lxdbr1 $NODE eth1 eth1
+    lxc start $NODE
+  done
+  echo "Test : ssh ubuntu@192.168.88.101 \"date && curl -I google.com\""
 }
 
 clusterdestroy()
 {
-  for node in $NODES
-  do
-    echo "==> Destroying $node..."
-    lxc delete --force $node
+  for NODE in $NODES; do
+    echo "==> Destroying $NODE..."
+    lxc list | grep -qo $NODE && lxc delete --force $NODE
   done
+  for ipnumber in {101..104}; do
+    lxc profile list | grep -qo double-network-config-$ipnumber && lxc profile delete double-network-config-$ipnumber
+  done
+  lxc profile list
+  lxc list
 }
 
 case "$1" in
