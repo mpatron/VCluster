@@ -14,6 +14,26 @@ vagrant global-status
 
 Linux libvirt
 
+Installation de KVM
+
+~~~bash
+sudo apt install cpu-checker
+mpatron@mario:~/VCluster$ kvm-ok
+INFO: /dev/kvm exists
+KVM acceleration can be used
+sudo apt install qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virtinst virt-manager
+~~~
+Installation de Vagrant
+~~~bash
+sudo apt install vagrant
+vagrant plugin install vagrant-libvirt
+vagrant plugin install vagrant-mutate
+vagrant plugin update
+mpatron@mario:~/VCluster$ vagrant plugin list
+vagrant-libvirt (0.0.45, system)
+vagrant-mutate (1.2.0, global)
+~~~
+
 ~~~bash
 vagrant box update
 vagrant plugin install vagrant-libvirt
