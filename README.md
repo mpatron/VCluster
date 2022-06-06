@@ -2,7 +2,7 @@
 
 ## Prosionning
 
-Windows VirtualBox
+### Windows VirtualBox
 
 ~~~powershell
 vagrant box update
@@ -12,9 +12,9 @@ vagrant destroy -f
 vagrant global-status
 ~~~
 
-Linux libvirt
+### Linux libvirt
 
-Installation de KVM
+#### Installation de KVM
 
 ~~~bash
 sudo apt install cpu-checker
@@ -23,7 +23,9 @@ INFO: /dev/kvm exists
 KVM acceleration can be used
 sudo apt install qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virtinst virt-manager
 ~~~
-Installation de Vagrant
+
+#### Installation de Vagrant
+
 ~~~bash
 sudo apt install vagrant
 vagrant plugin install vagrant-libvirt
@@ -42,7 +44,7 @@ vagrant plugin update
 vagrant up --provision --provider=libvirt
 ~~~
 
-Linux lxd
+## Linux lxd
 
 ~~~bash
 cd lxd
