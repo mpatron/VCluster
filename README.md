@@ -22,6 +22,8 @@ mpatron@mario:~/VCluster$ kvm-ok
 INFO: /dev/kvm exists
 KVM acceleration can be used
 sudo apt install qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virtinst virt-manager
+sudo usermod -aG libvirt $USER
+sudo usermod -aG kvm $USER
 ~~~
 
 #### Installation de Vagrant
