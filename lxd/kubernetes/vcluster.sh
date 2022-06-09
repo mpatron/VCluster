@@ -43,7 +43,7 @@ clusterprovision()
         lxc file push $PRIVATECA $node/usr/share/ca-certificates/extra/$PRIVATECA
         lxc exec $node -- sh -c "echo 'extra/$PRIVATECA' >> /etc/ca-certificates.conf"
       fi
-    do    
+    done
     lxc exec $node -- sh -c "update-ca-certificates"
 
     echo "==> Creation du compte de developpement ubuntu"
