@@ -57,6 +57,8 @@ then
   kubeadm config images pull >/dev/null 2>&1
 
   echo "[TASK 8] Initialize Kubernetes Cluster"
+  # Pour supprimer [WARNING SystemVerification]: failed to parse kernel config: unable to load kernel module: “configs”, output: “modprobe: FATAL: Module configs not found in directory /lib/modules/5.4.0–77-generic, dans les --ignore-preflight-errors
+  apt-get install -yqq linux-image-$(uname -r)
   kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all >> /root/kubeinit.log 2>&1
 
   echo "[TASK 9] Copy kube admin config to root user .kube directory"

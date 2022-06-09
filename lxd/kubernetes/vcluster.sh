@@ -29,20 +29,41 @@ clusterprovision()
     # lxc launch $IMAGE $node --profile node-profile --vm
     lxc launch $IMAGE $node --profile node-profile
     sleep 10
-    # echo "==> Running provisioner script"
-    cat bootstrap-kube.sh | lxc exec $node bash
-    echo
-    sleep 3
-    echo "Waiting starting $node..."
+    echo "==> Waiting starting $node ..."
     lxc exec $node -- bash -c 'while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && [ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do :; done'
-    echo "$node started."
+    echo "==> ... $node started."
+    
+    echo "==> Installation des certificats CA supplémentaire"
+    lxc exec $node -- sh -c "apt update >/dev/null 2>&1"
+    lxc exec $node -- sh -c "apt install -yqq ca-certificates apt-transport-https >/dev/null 2>&1"
+    lxc exec $node -- sh -c "mkdir -p /usr/share/ca-certificates/extra/"
+    PRIVATESCA="mycompany1-CA.crt mycompany2-CA.crt mycompany3-CA.crt"
+    for PRIVATECA in $PRIVATESCA; do
+      if [ -f $PRIVATECA ]; then
+        lxc file push $PRIVATECA $node/usr/share/ca-certificates/extra/$PRIVATECA
+        lxc exec $node -- sh -c "echo 'extra/$PRIVATECA' >> /etc/ca-certificates.conf"
+      fi
+    do    
+    lxc exec $node -- sh -c "update-ca-certificates"
+
+    echo "==> Creation du compte de developpement ubuntu"
     lxc exec $node -- sh -c "mkdir -p /home/ubuntu/.ssh"
     lxc exec $node -- sh -c "chmod 700 /home/ubuntu/.ssh"
-    cat ~/.ssh/id_rsa.pub | lxc exec $node -- sh -c "cat >> /home/ubuntu/.ssh/authorized_keys"
+    if [ -f ~/.ssh/id_rsa.pub ]; then
+      cat ~/.ssh/id_rsa.pub | lxc exec $node -- sh -c "cat >> /home/ubuntu/.ssh/authorized_keys"
+    fi    
     lxc exec $node -- sh -c "chown ubuntu:ubuntu -R /home/ubuntu"
     lxc exec $node --  bash -c 'printf "ubuntu\nubuntu\n" | passwd ubuntu'
     lxc exec $node --  bash -c "sed -i 's/#\?\(PasswordAuthentication\s*\).*$/\1 yes/' /etc/ssh/sshd_config"
     lxc exec $node --  bash -c 'systemctl restart sshd.service'
+  done
+
+  for node in $NODES
+  do
+    echo "==> Running provisioner script"
+    cat bootstrap-kube.sh | lxc exec $node bash
+    echo
+    sleep 3
   done
   
   NODES_IP=$(lxc list --format json | jq -r '.[] | .state.network.eth0.addresses | .[] | select (.family == "inet") | (.address)')
