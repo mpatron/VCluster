@@ -3,6 +3,8 @@
 
 IMAGE="ubuntu:20.04"
 
+IMAGE="ubuntu:20.04"
+
 usage()
 {
   echo "Usage: $(basename $0) [provision|destroy]"
