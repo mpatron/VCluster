@@ -59,12 +59,17 @@ cd lxd
 Visialisation de l'inventory sur le node0
 
 ~~~bash
+sudo apt install sshpass -y
 cat /etc/ansible/hosts | grep -v '^\s*$\|^\s*\#'
 for i in {0..4}; do ssh-keygen -f ~/.ssh/known_hosts -R "192.168.56.14${i}"; done
 for i in {0..4}; do ssh-keygen -f ~/.ssh/known_hosts -R "node${i}"; done
 ansible all -i ./inventory -m raw -a "sudo hwclock --hctosys && date"
 ansible-galaxy install -r requirements.yml --force
 ansible-playbook -i ./inventory provision.yml
+PYTHONUNBUFFERED=1 ANSIBLE_NOCOLOR=False ANSIBLE_CONFIG=ansible.cfg ansible-playbook --limit="all" --inventory-file=inventory --extra-vars=\{\"PROXY_ON\":false,\"PROXY_SERVER\":\"\"\} -v provision.yml
+# Première fois, reboot des vm
+vagrant halt
+vagrant up
 ~~~
 
 Exécuter une commande sur tous les noeux à partir du node0
