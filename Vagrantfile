@@ -72,7 +72,7 @@ Vagrant.configure("2") do |config|
   (0..VM_COUNT).each do |i|
     config.vm.define "node#{i}" do |node|
       node.vm.hostname = "node#{i}.jobjects.net"
-      node.vm.network "private_network", ip: "192.168.56.14#{i}"#, lxc__bridge_name: 'vlxcbr1'
+      node.vm.network "private_network", ip: "192.168.56.14#{i}"
       node.vm.provision "shell", run: "always", inline: <<-SHELL1
 sudo hostnamectl set-hostname node#{i}.jobjects.net
 sudo sed -i -e "\\#PasswordAuthentication no# s#PasswordAuthentication no#PasswordAuthentication yes#g" /etc/ssh/sshd_config
