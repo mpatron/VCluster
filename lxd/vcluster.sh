@@ -1,9 +1,8 @@
 #!/bin/bash
 # set -x
 
-IMAGE="ubuntu:20.04"
-
-IMAGE="ubuntu:20.04"
+# IMAGE="ubuntu:20.04"
+IMAGE="ubuntu:22.04"
 
 usage()
 {
