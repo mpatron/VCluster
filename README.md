@@ -18,6 +18,11 @@ vagrant plugin install vagrant-libvirt
 vagrant plugin install vagrant-mutate
 vagrant plugin update
 vagrant up --provision --provider=libvirt
+sudo apt install sshpass -y
+PYTHONUNBUFFERED=1 ANSIBLE_NOCOLOR=False ANSIBLE_CONFIG=ansible.cfg ansible-playbook --limit="all" --inventory-file=inventory --extra-vars=\{\"PROXY_ON\":false,\"PROXY_SERVER\":\"\"\} -v provision.yml
+# Première fois, reboot des vm
+vagrant halt
+vagrant up
 ~~~
 
 Linux lxd

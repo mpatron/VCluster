@@ -23,9 +23,9 @@
     apt: upgrade=dist force_apt_get=yes
 
   - name: Ecriture du fichier /etc/hosts
-    template: src=/vagrant/hosts.j2 dest=/etc/hosts mode=644 owner=root group=root
+    template: src=./hosts.j2 dest=/etc/hosts mode=644 owner=root group=root
   - name: Ecriture du fichier /etc/resolv.conf
-    template: src=/vagrant/resolv.conf.j2 dest=/etc/resolv.conf mode=644 owner=root group=root    
+    template: src=./resolv.conf.j2 dest=/etc/resolv.conf mode=644 owner=root group=root    
   - name: Installation des packages
     apt: name={{ item }} state=present update_cache=yes
     with_items:
