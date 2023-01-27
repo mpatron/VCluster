@@ -93,8 +93,7 @@ EOF'
 bash -c 'cat << EOF > /home/vagrant/.ssh/id_ed25519.pub
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLy67TsKpWE/PWY7sGt12L/Oh+wSmfpux/QmHdL198w vagrant@node0
 EOF'
-grep -q --no-messages "AAaAAC3NzaC1lZDI1NTE5AAAAIOLy67TsKpWE" /home/vagrant/.ssh/authorized_keys && echo "Deja present dans /home/vagrant/.ssh/authorized_
-keys" || bash -c 'echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLy67TsKpWE/PWY7sGt12L/Oh+wSmfpux/QmHdL198w vagrant@node0" >> /home/vagrant/.ssh/authorized_keys'
+grep -q --no-messages "AAaAAC3NzaC1lZDI1NTE5AAAAIOLy67TsKpWE" /home/vagrant/.ssh/authorized_keys && echo "Deja present dans /home/vagrant/.ssh/authorized_keys" || bash -c 'echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLy67TsKpWE/PWY7sGt12L/Oh+wSmfpux/QmHdL198w vagrant@node0" >> /home/vagrant/.ssh/authorized_keys'
 sudo chmod 600 /home/vagrant/.ssh/id_ed25519
 sudo chmod 600 /home/vagrant/.ssh/id_ed25519.pub
 sudo chmod 600 /home/vagrant/.ssh/authorized_keys
