@@ -25,3 +25,6 @@ exemples/2-cluster-kubernetes/roles
 
 .vscode
 .kube
+
+kvm/images
+kvm/iso
