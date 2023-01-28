@@ -106,9 +106,9 @@ echo "=== Inventory Ansible ==="
 grep -v "^\s*$\|^\s*\#" /etc/ansible/hosts
 echo "=== Maj Pip3 ==="
 # Si pip < 22.3
-# pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip3 install -U
+# pip3 list --outdated --format=freeze | grep -v "^\-e" | cut -d = -f 1 | xargs -n1 pip3 install -U
 # Si pip >= 22.3
-python3 -m pip list --outdated --format=json | jq -r '.[] | .name+"="+.latest_version'
+python3 -m pip list --outdated --format=json | jq -r ".[] | .name+\"=\"+.latest_version"
 echo "=== OS need to restart ? ==="
 if [ -f /var/run/reboot-required ]; then
   echo "reboot required"
