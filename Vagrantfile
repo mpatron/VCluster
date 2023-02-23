@@ -101,14 +101,14 @@ sudo chown vagrant:vagrant -R /home/vagrant/.ssh
 bash -c 'cat << EOF > /home/vagrant/maj.sh
 #!/bin/bash
 echo "=== Maj OS ==="
-sudo apt autoclean -y && sudo apt update -y && sudo apt upgrade -y -qq && sudo apt autoremove --purge -y
+sudo apt autoclean -yqq && sudo apt update -yqq && sudo apt upgrade -yqq && sudo apt autoremove --purge -yqq
 echo "=== Inventory Ansible ==="
 grep -v "^\s*$\|^\s*\#" /etc/ansible/hosts
 echo "=== Maj Pip3 ==="
 # Si pip < 22.3
 # pip3 list --outdated --format=freeze | grep -v "^\-e" | cut -d = -f 1 | xargs -n1 pip3 install -U
 # Si pip >= 22.3
-python3 -m pip list --outdated --format=json | jq -r ".[] | .name+\"=\"+.latest_version"
+python3 -m pip list --user --outdated --format=json | jq -r ".[] | .name+\"=\"+.latest_version" | xargs -n1 pip3 install --user --upgrade 
 echo "=== OS need to restart ? ==="
 if [ -f /var/run/reboot-required ]; then
   echo "reboot required"
