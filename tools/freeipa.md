@@ -56,3 +56,10 @@ ipa service-add monservice/mamachine.jobjects.org
 ipa-getcert request -r -f /etc/ssl/certs/monservice.crt -k /etc/ssl/certs/monservice.key -K monservice/mamachine.jobjects.org
 
 sudo ipa-getcert list
+
+
+## Hashicopr Vault
+https://medium.com/@mitesh_shamra/setup-hashicorp-vault-using-ansible-fa8073a70a56
+https://github.com/MiteshSharma/AnsibleVaultRole
+
+ 
