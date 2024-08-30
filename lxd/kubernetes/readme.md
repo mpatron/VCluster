@@ -8,6 +8,14 @@
  |_.__/ \___|\__\__,_|
 ~~~
 
+## Installation
+
+~~~bash
+sudo apt install lxc-utils
+# Vérification
+lxc-checkconfig
+~~~
+
 ~~~bash
 # https://lxdware.com/persistent-storage-on-lxd-instances/
 lxc list --format json | jq -r '.[] | .state.network.eth0.addresses | .[] | select (.family == "inet") | (.address)'
