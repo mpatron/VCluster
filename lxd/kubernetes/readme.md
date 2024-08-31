@@ -12,8 +12,27 @@
 
 ~~~bash
 sudo apt install lxc-utils
+getent group lxd >/dev/null || sudo groupadd --system lxd
+getent group lxd | grep -qwF "$USER" || sudo usermod -aG lxd "$USER" # adding current user as an example
 # Vérification
 lxc-checkconfig
+lxc init ubuntu:24.04 ubuntu-vm --vm
+lxc start ubuntu-vm --console
+lxc exec ubuntu-vm -- bash -c 'date && ip a'
+lxc exec ubuntu-vm bash
+
+    node=ubuntu-vm
+    echo "==> Creation du compte de developpement ubuntu"
+    lxc exec $node -- sh -c "mkdir -p /home/ubuntu/.ssh"
+    lxc exec $node -- sh -c "chmod 700 /home/ubuntu/.ssh"
+    if [ -f ~/.ssh/id_rsa.pub ]; then
+      cat ~/.ssh/id_rsa.pub | lxc exec $node -- sh -c "cat >> /home/ubuntu/.ssh/authorized_keys"
+    fi    
+    lxc exec $node -- sh -c "chown ubuntu:ubuntu -R /home/ubuntu"
+    lxc exec $node -- bash -c 'printf "ubuntu\nubuntu\n" | passwd ubuntu'
+    lxc exec $node -- bash -c "sed -i 's/#\?\(PasswordAuthentication\s*\).*$/\1 yes/' /etc/ssh/sshd_config"
+    lxc exec $node -- bash -c 'systemctl restart sshd.service'
+    
 ~~~
 
 ~~~bash

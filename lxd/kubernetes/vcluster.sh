@@ -1,7 +1,7 @@
 #!/bin/bash
 # set -x
 
-IMAGE="ubuntu:20.04"
+IMAGE="ubuntu:24.04"
 
 usage()
 {
@@ -14,9 +14,9 @@ if [ $# -ne 1 ] ; then
     exit 0
 fi
 
-# NODES="node0 node1 node2 node3"
+NODES="node0 node1 node2 node3"
 # NODES="node0 node1"
-NODES="kmaster0 worker1 worker2"
+# NODES="kmaster0 worker1 worker2"
 
 clusterprovision()
 {
@@ -53,9 +53,9 @@ clusterprovision()
       cat ~/.ssh/id_rsa.pub | lxc exec $node -- sh -c "cat >> /home/ubuntu/.ssh/authorized_keys"
     fi    
     lxc exec $node -- sh -c "chown ubuntu:ubuntu -R /home/ubuntu"
-    lxc exec $node --  bash -c 'printf "ubuntu\nubuntu\n" | passwd ubuntu'
-    lxc exec $node --  bash -c "sed -i 's/#\?\(PasswordAuthentication\s*\).*$/\1 yes/' /etc/ssh/sshd_config"
-    lxc exec $node --  bash -c 'systemctl restart sshd.service'
+    lxc exec $node -- bash -c 'printf "ubuntu\nubuntu\n" | passwd ubuntu'
+    lxc exec $node -- bash -c "sed -i 's/#\?\(PasswordAuthentication\s*\).*$/\1 yes/' /etc/ssh/sshd_config"
+    lxc exec $node -- bash -c 'systemctl restart sshd.service'
   done
 
   for node in $NODES
