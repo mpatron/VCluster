@@ -5,7 +5,7 @@ IMAGE="ubuntu:24.04"
 
 usage()
 {
-  echo "Usage: $(basename $0) [provision|destroy]"
+  echo "Usage: $(basename $0) [provision|destroy|status]"
   exit 1
 }
 echo "debug: $0,$1,$2,$3,$4" $(dirname $0) $(basename $0)
@@ -14,8 +14,8 @@ if [ $# -ne 1 ] ; then
     exit 0
 fi
 
-NODES="node0 node1 node2 node3"
-# NODES="node0 node1"
+# NODES="node0 node1 node2 node3"
+NODES="node0 node1"
 # NODES="kmaster0 worker1 worker2"
 
 clusterprovision()
@@ -79,6 +79,14 @@ clusterdestroy()
     echo "==> Destroying $node..."
     lxc delete --force $node
   done
+  lxc profile delete node-profile
+  clusterstatus
+}
+
+clusterstatus()
+{
+  lxc list
+  lxc profile list
 }
 
 case "$1" in
@@ -89,6 +97,10 @@ case "$1" in
   destroy)
     echo -e "\nDestroying VCluster...\n"
     clusterdestroy
+    ;;
+  status)
+    echo -e "\nStatus VCluster...\n"
+    clusterstatus
     ;;
   *)
     usage
