@@ -9,7 +9,7 @@ config:
     lxc.cap.drop=
     lxc.cgroup.devices.allow=a
     lxc.mount.auto=proc:rw
-    sys:rw
+#    sys:rw
   security.privileged: "true"
   security.nesting: "true"
 description: LXD profile for Kubernetes

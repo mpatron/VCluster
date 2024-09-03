@@ -35,7 +35,7 @@ clusterprovision()
     
     echo "==> Installation des certificats CA supplémentaire"
     lxc exec $node -- sh -c "apt update >/dev/null 2>&1"
-    lxc exec $node -- sh -c "apt install -yqq ca-certificates apt-transport-https >/dev/null 2>&1"
+    lxc exec $node -- sh -c "apt install -yqq ca-certificates apt-transport-https sshd >/dev/null 2>&1"
     lxc exec $node -- sh -c "mkdir -p /usr/share/ca-certificates/extra/"
     PRIVATESCA="mycompany1-CA.crt mycompany2-CA.crt mycompany3-CA.crt"
     for PRIVATECA in $PRIVATESCA; do
@@ -87,6 +87,8 @@ clusterstatus()
 {
   lxc list
   lxc profile list
+  lxc image list
+  lxc storage ls
 }
 
 case "$1" in
