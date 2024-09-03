@@ -94,3 +94,7 @@ ansible node0 -m ansible.builtin.setup
 
 ## Shelll
 lxc exec node0 -- bash
+
+
+https://github.com/thopiekar/rcraid-dkms
+https://launchpad.net/~thopiekar/+archive/ubuntu/rcraid
