@@ -8,6 +8,7 @@ all:
     plugin: community.general.lxd
     url: unix:/var/snap/lxd/common/lxd/unix.socket
     type_filter: both
+    state: RUNNING
   children:
     gluster:
       hosts:
@@ -22,6 +23,3 @@ all:
           hosts:
             node0: {}
             node1: {}
-    ungrouped:
-      hosts:
-        v1: {}

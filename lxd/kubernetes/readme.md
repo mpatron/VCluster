@@ -59,6 +59,17 @@ sudo brctl delbr lxcbr0
 snap install lxd
 ~~~
 
+
+Open the file /etc/default/grub in an editor. Find where the string GRUB_CMDLINE_LINUX is set. Add cgroup_enable=memory swapaccount=1 systemd.unified_cgroup_hierarchy=0 to that string. Save the file and exit the editor. Then run:
+~~~bash
+mickael@deborah:~/Documents/VCluster/lxd/kubernetes$ cat /etc/default/grub | grep GRUB_CMDLINE_LINUX
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+# GRUB_CMDLINE_LINUX=""
+GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1 systemd.unified_cgroup_hierarchy=0"
+mickael@deborah:~/Documents/VCluster/lxd/kubernetes$ sudo update-grub
+~~~
+
+
 ~~~bash
 mickael@deborah:~/Documents/VCluster/lxd/kubernetes$ sudo snap install lxd
 lxd (5.21/stable) 5.21.2-22f93f4 par Canonical✓ installé
