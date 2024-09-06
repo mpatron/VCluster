@@ -31,7 +31,7 @@ lxc exec ubuntu-vm bash
     lxc exec $node -- sh -c "chown ubuntu:ubuntu -R /home/ubuntu"
     lxc exec $node -- bash -c 'printf "ubuntu\nubuntu\n" | passwd ubuntu'
     lxc exec $node -- bash -c "sed -i 's/#\?\(PasswordAuthentication\s*\).*$/\1 yes/' /etc/ssh/sshd_config"
-    lxc exec $node -- bash -c 'systemctl restart sshd.service'
+    lxc exec $node -- bash -c 'systemctl restart ssh.service'
     
 ~~~
 
