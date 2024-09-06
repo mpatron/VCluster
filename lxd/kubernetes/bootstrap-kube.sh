@@ -56,6 +56,8 @@ chmod +x /etc/rc.local
 
 if [[ $(hostname) =~ .*master.* ]]
 then
+  echo "source /etc/bash_completion" >> /root/.bashrc # Work arround bug : https://stackoverflow.com/questions/50406142/kubectl-bash-completion-doesnt-work-in-ubuntu-docker-container
+  echo "source <(kubectl completion bash)" >> /root/.bashrc
 
   echo "[TASK 7] Pull required containers"
   kubeadm config images pull >/dev/null 2>&1

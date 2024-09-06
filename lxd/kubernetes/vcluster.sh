@@ -14,9 +14,9 @@ if [ $# -ne 1 ] ; then
     exit 0
 fi
 
-NODES="node0 node1 node2 node3"
+# NODES="node0 node1 node2 node3"
 # NODES="node0 node1"
-# NODES="kmaster0 worker1 worker2"
+NODES="kmaster0 worker1 worker2"
 
 clusterprovision()
 {
@@ -85,9 +85,13 @@ clusterdestroy()
 
 clusterstatus()
 {
+  echo "== Liste des containers =="
   lxc list
+  echo "== Liste des profiles =="
   lxc profile list
+  echo "== Liste des images =="
   lxc image list
+  echo "== Liste des storages =="
   lxc storage ls
 }
 
