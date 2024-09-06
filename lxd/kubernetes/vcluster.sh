@@ -16,7 +16,7 @@ fi
 
 # NODES="node0 node1 node2 node3"
 # NODES="node0 node1"
-NODES="kmaster0 worker1 worker2"
+NODES="master0 worker1 worker2"
 
 clusterprovision()
 {
@@ -55,6 +55,7 @@ clusterprovision()
     lxc exec $node -- sh -c "chown ubuntu:ubuntu -R /home/ubuntu"
     lxc exec $node -- bash -c 'printf "ubuntu\nubuntu\n" | passwd ubuntu'
     lxc exec $node -- bash -c "sed -i 's/#\?\(PasswordAuthentication\s*\).*$/\1 yes/' /etc/ssh/sshd_config"
+    lxc exec $node -- bash -c "sed -i 's/#\?\(PasswordAuthentication\s*\).*$/\1 yes/' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf"
     lxc exec $node -- bash -c 'systemctl restart ssh.service'
   done
 

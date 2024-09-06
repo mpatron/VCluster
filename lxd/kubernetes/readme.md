@@ -41,6 +41,8 @@ lxc list --format json | jq -r '.[] | .state.network.eth0.addresses | .[] | sele
 # https://medium.com/linuxstories/vagrant-create-a-multi-machine-environment-b90738383a7e
 lxc image list images: | grep -i ubuntu | grep x86_64 | grep focal
 # https://medium.com/geekculture/a-step-by-step-demo-on-kubernetes-cluster-creation-f183823c0411
+# https://www.slingacademy.com/article/how-to-set-up-a-highly-available-master-node-in-kubernetes/?utm_content=cmp-true
+# https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/
 ~~~
 
 ~~~bash

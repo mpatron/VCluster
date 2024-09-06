@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 # This script has been tested on Ubuntu 20.04
 # For other versions of Ubuntu, you might need some tweaking
 
@@ -22,12 +22,13 @@ EOF
 echo "[TASK 2] Add apt repo for kubernetes"
 # curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - >/dev/null 2>&1
 # apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main" >/dev/null 2>&1
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 sudo apt-get update
 
 echo "[TASK 3] Install Kubernetes components (kubeadm, kubelet and kubectl)"
 apt install -qq -y kubeadm kubelet kubectl >/dev/null 2>&1
+apt-mark hold kubelet kubeadm kubectl
 # apt install -qq -y kubeadm=1.22.0-00 kubelet=1.22.0-00 kubectl=1.22.0-00 >/dev/null 2>&1
 # echo 'KUBELET_EXTRA_ARGS="--fail-swap-on=false"' > /etc/default/kubelet
 # /var/lib/kubelet/config.yaml
@@ -53,7 +54,6 @@ chmod +x /etc/rc.local
 #######################################
 # To be executed only on master nodes #
 #######################################
-
 if [[ $(hostname) =~ .*master.* ]]
 then
   echo "source /etc/bash_completion" >> /root/.bashrc # Work arround bug : https://stackoverflow.com/questions/50406142/kubectl-bash-completion-doesnt-work-in-ubuntu-docker-container
@@ -78,10 +78,9 @@ then
   kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
   kubectl create -f https://projectcalico.docs.tigera.io/manifests/custom-resources.yaml
 
-  echo "[TASK 11] Generate and save cluster join command to /joincluster.sh"
+  echo "[TASK 11] Generate and save cluster join command to /root/joincluster.sh"
   joinCommand=$(kubeadm token create --print-join-command 2>/dev/null) 
-  echo "$joinCommand --ignore-preflight-errors=all" > /joincluster.sh
-
+  echo "$joinCommand --ignore-preflight-errors=all" > /root/joincluster.sh
 fi
 
 #######################################
@@ -92,6 +91,6 @@ if [[ $(hostname) =~ .*worker.* ]]
 then
   echo "[TASK 7] Join node to Kubernetes Cluster"
   apt install -qq -y sshpass >/dev/null 2>&1
-  sshpass -p "kubeadmin" scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no kmaster.lxd:/joincluster.sh /joincluster.sh 2>/tmp/joincluster.log
-  bash /joincluster.sh >> /tmp/joincluster.log 2>&1
+  sshpass -p "kubeadmin" scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no master0.lxd:/root/joincluster.sh /root/joincluster.sh 2>/tmp/joincluster.log
+  bash /root/joincluster.sh >> /tmp/joincluster.log 2>&1
 fi
