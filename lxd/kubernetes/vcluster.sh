@@ -16,7 +16,7 @@ fi
 
 # NODES="node0 node1 node2 node3"
 # NODES="node0 node1"
-NODES="master0 worker1 worker2"
+NODES="master0 worker1 worker2 worker3"
 
 clusterprovision()
 {

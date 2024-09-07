@@ -1,7 +1,8 @@
 #!/bin/bash
 set -x
-# This script has been tested on Ubuntu 20.04
+# This script has been tested on Ubuntu 24.04
 # For other versions of Ubuntu, you might need some tweaking
+# https://github.com/justmeandopensource/kubernetes/blob/master/lxd-provisioning/bootstrap-kube.sh
 
 echo "[TASK 1] Install containerd runtime"
 apt update -qq >/dev/null 2>&1
