@@ -30,9 +30,9 @@ echo "[TASK 3] Install Kubernetes components (kubeadm, kubelet and kubectl)"
 apt install -qq -y kubeadm kubelet kubectl >/dev/null 2>&1
 apt-mark hold kubelet kubeadm kubectl
 # apt install -qq -y kubeadm=1.22.0-00 kubelet=1.22.0-00 kubectl=1.22.0-00 >/dev/null 2>&1
-# echo 'KUBELET_EXTRA_ARGS="--fail-swap-on=false"' > /etc/default/kubelet
+echo 'KUBELET_EXTRA_ARGS="--fail-swap-on=false"' > /etc/default/kubelet
 # /var/lib/kubelet/config.yaml
-# systemctl restart kubelet
+systemctl restart kubelet
 
 echo "[TASK 4] Enable ssh password authentication"
 sed -i 's/^PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
@@ -75,8 +75,8 @@ then
   # kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml > /dev/null 2>&1
 
   echo "[TASK 10] Deploy Calico network"
-  kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
-  kubectl create -f https://projectcalico.docs.tigera.io/manifests/custom-resources.yaml
+  kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/tigera-operator.yaml >/dev/null
+  kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml >/dev/null
 
   echo "[TASK 11] Generate and save cluster join command to /root/joincluster.sh"
   joinCommand=$(kubeadm token create --print-join-command 2>/dev/null) 
